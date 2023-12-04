@@ -1,0 +1,3 @@
+﻿exitInput //unusing this days
+androidTextInput //unusing this days
+random names databases //unnessesary, but fun

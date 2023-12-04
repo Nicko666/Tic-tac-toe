@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
+  m_Name: My Localization Table
+  m_EditorClassIdentifier: 
+  m_SharedTableData: {fileID: 11400000, guid: d58efa83ddd3fa7499ec83cbfcc78669, type: 2}
+  m_Tables:
+  - {fileID: 11400000, guid: d3be3826afddcf640b92d1a3244a914a, type: 2}
+  - {fileID: 11400000, guid: de5824cc35a25a8438f406be987a2f70, type: 2}
+  m_Extensions: []
+  m_Group: String Table
+  references:
+    version: 2
+    RefIds: []

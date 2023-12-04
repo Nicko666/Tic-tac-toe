@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc059f867324cd4180e1a562405a79b, type: 3}
+  m_Name: BasicPlayerMarksDatabase
+  m_EditorClassIdentifier: 
+  _items:
+  - {fileID: 11400000, guid: 526a6301b98a92841bcc493f475c2e41, type: 2}
+  - {fileID: 11400000, guid: 636b54a37a3c7f3488489485e2a83258, type: 2}
+  - {fileID: 11400000, guid: 0c13b3f064c458349b37ff45a7890a80, type: 2}
+  - {fileID: 11400000, guid: a9f63ce33984de0408b67f20b73ec189, type: 2}
+  - {fileID: 11400000, guid: fbd0dec9982abe64d946adee60ee7055, type: 2}
+  - {fileID: 11400000, guid: aee15b44f4708204f8e4c806a303caf0, type: 2}

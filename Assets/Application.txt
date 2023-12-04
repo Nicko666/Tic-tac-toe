@@ -1,0 +1,8 @@
+list<Player>
+	string Name
+	sprite Sprite
+	Color Color
+	Playeble Playeble
+
+int Size
+
