@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11ab00b37cf3544eb30616def1d4f53, type: 3}
+  m_Name: ProgressDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::Database
+  <MinPlayersCount>k__BackingField: 2
+  <LoadingDelay>k__BackingField: 0.5
+  <BoardsModel>k__BackingField:
+  - <ID>k__BackingField: 0
+    <SquereTilesCount>k__BackingField: 3
+    <Icon>k__BackingField: {fileID: 21300000, guid: b9d582130403e39469ea44d0e37908b6, type: 3}
+  - <ID>k__BackingField: 1
+    <SquereTilesCount>k__BackingField: 4
+    <Icon>k__BackingField: {fileID: 21300000, guid: bfa0685506a3fa545a3ac70a95294adb, type: 3}
+  - <ID>k__BackingField: 2
+    <SquereTilesCount>k__BackingField: 5
+    <Icon>k__BackingField: {fileID: 21300000, guid: 463b7c2de9ad30b46b596629fbd68c7e, type: 3}
+  <LevelsModel>k__BackingField:
+  - <ID>k__BackingField: 0
+    <Points>k__BackingField: 1
+    <Icon>k__BackingField: {fileID: 21300000, guid: cc7d9166cf2fc4f4aa54d6ddb4a64329, type: 3}
+  - <ID>k__BackingField: 1
+    <Points>k__BackingField: 2
+    <Icon>k__BackingField: {fileID: 21300000, guid: cc67ae5721dcf7f40857fd54e480adc2, type: 3}
+  - <ID>k__BackingField: 2
+    <Points>k__BackingField: 3
+    <Icon>k__BackingField: {fileID: 21300000, guid: 0186ba9fe3c18164eaac29b10a7df858, type: 3}
+  <LogicsModel>k__BackingField:
+  - <ID>k__BackingField: 0
+    <Logic>k__BackingField: 0
+    <Icon>k__BackingField: {fileID: 21300000, guid: 64de6e7a6bf2e78469907f11492e2d5f, type: 3}
+  - <ID>k__BackingField: 2
+    <Logic>k__BackingField: 2
+    <Icon>k__BackingField: {fileID: 21300000, guid: 16b1ed07784a0f847a468ba3a96263c7, type: 3}
+  <Marks>k__BackingField:
+  - <ID>k__BackingField: 0
+    <Icon>k__BackingField: {fileID: 21300000, guid: 45aa58d957f5a9044a559d693c9e5ccf, type: 3}
+  - <ID>k__BackingField: 1
+    <Icon>k__BackingField: {fileID: 21300000, guid: 23021c9164bf96a4fa2e20251ca43a90, type: 3}
+  - <ID>k__BackingField: 2
+    <Icon>k__BackingField: {fileID: 21300000, guid: 8c325cc7d6edef747b3cad0b3e76e0af, type: 3}
+  - <ID>k__BackingField: 3
+    <Icon>k__BackingField: {fileID: 21300000, guid: 9b1cce6284df2b74db5cc1be8626b335, type: 3}
+  - <ID>k__BackingField: 4
+    <Icon>k__BackingField: {fileID: 21300000, guid: 6fe84df15edbe21439f98d3cba64e832, type: 3}
+  - <ID>k__BackingField: 5
+    <Icon>k__BackingField: {fileID: 21300000, guid: db1015d713342c54b9525164ee60d1e5, type: 3}

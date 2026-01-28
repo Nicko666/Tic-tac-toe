@@ -1,0 +1,17 @@
+{
+    "name": "MenuController",
+    "rootNamespace": "",
+    "references": [
+        "GUID:53a8eb3134f86b8469599a2397e8b406",
+        "GUID:7f1992d8d25a3c942be7125392f45291"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

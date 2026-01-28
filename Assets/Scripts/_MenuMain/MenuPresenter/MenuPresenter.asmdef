@@ -1,0 +1,20 @@
+{
+    "name": "MenuPresenter",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:53a8eb3134f86b8469599a2397e8b406",
+        "GUID:7f1992d8d25a3c942be7125392f45291",
+        "GUID:709b36d8649e0de4683e7bb6aaf6c323",
+        "GUID:160f44466abd88e4b8bb4123cb4b259a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

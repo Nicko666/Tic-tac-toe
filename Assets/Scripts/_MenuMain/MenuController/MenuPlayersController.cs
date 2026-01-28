@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+
+public class MenuPlayersController
+{
+    private int _minPlayersCount;
+    private readonly List<PlayerModel> _players = new();
+    private PlayerPool _playerPool;
+
+    public Action<PlayerModel[]> onChanged;
+    public Action onInputSaveProgress;
+
+    public void SetDatabase(int minPlayersCount, LogicModel[] defaultLogics, MarkModel[] defaultMarks)
+    {
+        _minPlayersCount = minPlayersCount;
+        _playerPool = new(defaultLogics, defaultMarks);
+    }
+
+    public void SetPlayers(PlayerModel[] players)
+    {
+        _players.Clear();
+        _players.AddRange(players);
+
+        _players.ForEach(player => _playerPool.GetPlayer(ref player));
+
+        while (_players.Count < _minPlayersCount)
+            _players.Add(_playerPool.GetPlayer());
+
+        onChanged.Invoke(_players.ToArray());
+    }
+    public void GetPlayers(ref PlayerModel[] playersModel) =>
+        playersModel = _players.ToArray();
+
+    public void AddPlayer()
+    {
+        _players.Add(_playerPool.GetPlayer());
+
+        onChanged.Invoke(_players.ToArray());
+        onInputSaveProgress.Invoke();
+    }
+    public void RemovePlayer(PlayerModel player)
+    {
+        if (_players.Count > _minPlayersCount)
+            _players.Remove(player);
+
+        onChanged.Invoke(_players.ToArray());
+        onInputSaveProgress.Invoke();
+    }
+    public void RemoveLastPlayer()
+    {
+        if (_players.Count > _minPlayersCount)
+            _players.Remove(_players[^1]);
+
+        onChanged.Invoke(_players.ToArray());
+        onInputSaveProgress.Invoke();
+    }
+    public void SetPlayerIndex(PlayerModel playerModel, int index)
+    {
+        _players.Remove(playerModel);
+        _players.Insert(index, playerModel);
+
+        onChanged.Invoke(_players.ToArray());
+        onInputSaveProgress.Invoke();
+    }
+
+    public void SetPlayerSettings(PlayerModel player, PlayerSettingsModel playerSettings)
+    {
+        player.mark = playerSettings.mark;
+        player.logic = playerSettings.logic;
+        player.hue = playerSettings.hue;
+        player.saturation = playerSettings.saturation;
+
+        onChanged.Invoke(_players.ToArray());
+        onInputSaveProgress.Invoke();
+    }
+
+    class PlayerPool
+    {
+        private Random _random = new Random();
+        private LogicModel[] _defaultLogics;
+        private MarkModel[] _defaultMarks;
+
+        internal PlayerPool(LogicModel[] defaultLogics, MarkModel[] defaultMarks)
+        {
+            _defaultLogics = defaultLogics;
+            _defaultMarks = defaultMarks;
+        }
+
+        internal PlayerModel GetPlayer()
+        {
+            PlayerModel player = new();
+            player.logic = _defaultLogics[_random.Next(_defaultLogics.Length)];
+            player.mark = _defaultMarks[_random.Next(_defaultMarks.Length)];
+            player.hue = (float)_random.Next(0, 100) / 100;
+            player.saturation = (float)_random.Next(0, 100) / 100;
+            return player;
+        }
+
+        internal void GetPlayer(ref PlayerModel player)
+        {
+            player.logic ??= _defaultLogics[0];
+            player.mark ??= _defaultMarks[0];
+        }
+    }
+}

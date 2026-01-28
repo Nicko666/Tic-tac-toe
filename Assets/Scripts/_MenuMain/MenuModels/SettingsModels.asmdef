@@ -1,0 +1,16 @@
+{
+    "name": "SettingsModels",
+    "rootNamespace": "",
+    "references": [
+        "GUID:53a8eb3134f86b8469599a2397e8b406"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

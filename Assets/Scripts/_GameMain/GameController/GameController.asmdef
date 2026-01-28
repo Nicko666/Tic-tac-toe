@@ -1,0 +1,17 @@
+{
+    "name": "GameController",
+    "rootNamespace": "",
+    "references": [
+        "GUID:53a8eb3134f86b8469599a2397e8b406",
+        "GUID:a7370397347ea4e44b748ad546ea6828"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
