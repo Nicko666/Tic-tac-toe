@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Database
   <MinPlayersCount>k__BackingField: 2
   <LoadingDelay>k__BackingField: 0.5
-  <BoardsModel>k__BackingField:
+  <Boards>k__BackingField:
   - <ID>k__BackingField: 0
     <SquereTilesCount>k__BackingField: 3
     <Icon>k__BackingField: {fileID: 21300000, guid: b9d582130403e39469ea44d0e37908b6, type: 3}
@@ -24,7 +24,7 @@ MonoBehaviour:
   - <ID>k__BackingField: 2
     <SquereTilesCount>k__BackingField: 5
     <Icon>k__BackingField: {fileID: 21300000, guid: 463b7c2de9ad30b46b596629fbd68c7e, type: 3}
-  <LevelsModel>k__BackingField:
+  <Levels>k__BackingField:
   - <ID>k__BackingField: 0
     <Points>k__BackingField: 1
     <Icon>k__BackingField: {fileID: 21300000, guid: cc7d9166cf2fc4f4aa54d6ddb4a64329, type: 3}
@@ -34,7 +34,7 @@ MonoBehaviour:
   - <ID>k__BackingField: 2
     <Points>k__BackingField: 3
     <Icon>k__BackingField: {fileID: 21300000, guid: 0186ba9fe3c18164eaac29b10a7df858, type: 3}
-  <LogicsModel>k__BackingField:
+  <Logics>k__BackingField:
   - <ID>k__BackingField: 0
     <Logic>k__BackingField: 0
     <Icon>k__BackingField: {fileID: 21300000, guid: 64de6e7a6bf2e78469907f11492e2d5f, type: 3}

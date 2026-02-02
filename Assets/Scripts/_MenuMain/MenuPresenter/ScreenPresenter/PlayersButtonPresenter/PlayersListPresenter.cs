@@ -19,20 +19,12 @@ internal class PlayersListPresenter : MonoBehaviour
     private readonly List<(Transform cell, PlayersListItemPresenter item, PlayerModel model)> _items = new();
     private PlayersListItemPresenter _draggingItem, _removingItem;
 
-    internal UnityAction<PlayerModel> onInputPlayer;
-    internal UnityAction<PlayerModel, int> onInputPlayerIndex;
-    internal UnityAction<PlayerModel> onInputRemovePlayer;
-
-    internal event UnityAction onInputAddLastPlayer 
-    {
-        add => _addButton.onClick.AddListener(value); 
-        remove => _addButton.onClick.RemoveListener(value);
-    }
-    internal event UnityAction onInputRemoveLastPlayer
-    {
-        add => _removeButton.onClick.AddListener(value);
-        remove => _removeButton.onClick.RemoveListener(value);
-    }
+    internal Action<SoundModel> onInputSound;
+    internal Action<PlayerModel> onInputPlayer;
+    internal Action<PlayerModel, int> onInputPlayerIndex;
+    internal Action<PlayerModel> onInputRemovePlayer;
+    internal Action onInputAddLastPlayer;
+    internal Action onInputRemoveLastPlayer;
 
     internal void OutputPlayers(PlayerModel[] players)
     {
@@ -63,7 +55,7 @@ internal class PlayersListPresenter : MonoBehaviour
             Destroy(cell.gameObject);
         }
 
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
             int oldIndex = _items.Exists(j => j.model == players[i]) ?
                 _items.FindIndex(j => j.model == players[i]) :
@@ -75,8 +67,8 @@ internal class PlayersListPresenter : MonoBehaviour
             _items[oldIndex] = new(_items[oldIndex].cell, _items[i].item, _items[i].model);
             _items[i] = new(_items[i].cell, playerPresenter, playerModel);
             if (_items[i].item != _draggingItem)
-                //StartCoroutine(SetParentCoroutne(_items[i].cell, _items[i].item));
-                _items[i].item.transform.SetParent(_items[i].cell, false);
+                //StartCoroutine(SetParentRoutne(_items[i].cell, _items[i].item));
+                  _items[i].item.transform.SetParent(_items[i].cell, false);
 
             _items[i].item.OutputPlayer(players[i]);
             _items[i].item.OutputIsDraggin(_draggingItem != null);
@@ -85,8 +77,14 @@ internal class PlayersListPresenter : MonoBehaviour
         _deleteHoover.OutputInteractable(players.Length > 2);
     }
 
-    private IEnumerator SetParentCoroutne(Transform cell, PlayersListItemPresenter item)
+
+    private IEnumerator SetParentsRoutne(Transform cell, PlayersListItemPresenter item)
     {
+        
+        //for (int i = 0; i < _items.Count; i++)
+        //    if (_items[i].item != _draggingItem)
+        //        _items[i].item.transform.SetParent(_items[i].cell, false);
+
         item.transform.SetParent(cell, true);
 
         while (item.transform.localPosition != Vector3.zero && _itemsSpeed > 0)
@@ -109,18 +107,37 @@ internal class PlayersListPresenter : MonoBehaviour
         _deleteHoover.onDrop += InputRemoveItemDrop;
         _scrollUpHoover.onHoover += InputScrollUp;
         _scrollDownHoover.onHoover += InputScrollDown;
+        _addButton.onClick.AddListener(InputAddLastPlayer);
+        _removeButton.onClick.AddListener(InputRemoveLastPlayer);
+    }
+    private void OnDestroy()
+    {
+        _deleteHoover.onEnter -= InputRemoveItemHoover;
+        _deleteHoover.onDrop -= InputRemoveItemDrop;
+        _scrollUpHoover.onHoover -= InputScrollUp;
+        _scrollDownHoover.onHoover -= InputScrollDown;
+        _addButton.onClick.RemoveListener(InputAddLastPlayer);
+        _removeButton.onClick.RemoveListener(InputRemoveLastPlayer);
+    }
+    private void Start() =>
+        _canvases.OutputDragged(false);
+
+    private void InputAddLastPlayer()
+    {
+        onInputAddLastPlayer.Invoke();
+        onInputSound.Invoke(SoundModel.Accept);
+    }
+
+    private void InputRemoveLastPlayer()
+    {
+        onInputRemoveLastPlayer.Invoke();
+        onInputSound.Invoke(SoundModel.Accept);
     }
 
     private void InputScrollUp() =>
         _scrollRect.verticalNormalizedPosition += _scrollSensitivity / _scrollRect.content.rect.height;
     private void InputScrollDown() =>
         _scrollRect.verticalNormalizedPosition -= _scrollSensitivity / _scrollRect.content.rect.height;
-
-    private void OnDestroy()
-    {
-        _deleteHoover.onEnter += InputRemoveItemHoover;
-        _deleteHoover.onDrop -= InputRemoveItemDrop;
-    }
 
     private void InputRemoveItemHoover(bool value) =>
         _removingItem = value ? _draggingItem : null;
@@ -133,11 +150,11 @@ internal class PlayersListPresenter : MonoBehaviour
         }
     }
 
-    private void Start() =>
-        _canvases.OutputDragged(false);
-
-    private void InputItemClick(PlayerModel player) =>
+    private void InputItemClick(PlayerModel player)
+    {
         onInputPlayer.Invoke(player);
+        onInputSound.Invoke(SoundModel.Accept);
+    }
 
     private void InputItemPress(PlayersListItemPresenter item, bool isHolding)
     {
@@ -145,13 +162,20 @@ internal class PlayersListPresenter : MonoBehaviour
         {
             _draggingItem = item;
             _draggingItem?.transform.SetParent(_draggedItemContent);
+            onInputSound.Invoke(SoundModel.Accept);
         }
         else
         {
             _draggingItem?.transform.SetParent(_items.Find(i => i.item == item).cell, false);
             _draggingItem = null;
+            onInputSound.Invoke(SoundModel.Accept);
         }
         _items.ForEach(i => i.item.OutputIsDraggin(isHolding));
+
+        for (int i = 0; i < _items.Count; i++)
+            if (_items[i].item != _draggingItem)
+                _items[i].item.transform.SetParent(_items[i].cell, false);
+
         _canvases.OutputDragged(_draggingItem != null);
     }
 
@@ -183,6 +207,7 @@ internal class PlayersListPresenter : MonoBehaviour
         else
             _scrollRect.OnDrag(eventData);
     }
+
 
     [Serializable]
     class CanvasesPresenter

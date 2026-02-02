@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MenuPresenter::SettingsPresenter
   _panel: {fileID: 6296615944155473324}
-  _togglesText: {fileID: 1375100488498822485}
+  _framesTogglesText: {fileID: 1375100488498822485}
   _volumeSlider: {fileID: 1883863313302017404}
 --- !u!1 &5139071745878621614
 GameObject:

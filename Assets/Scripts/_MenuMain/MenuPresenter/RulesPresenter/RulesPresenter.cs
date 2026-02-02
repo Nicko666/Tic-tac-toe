@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 internal class RulesPresenter : MonoBehaviour
 {
@@ -11,12 +10,9 @@ internal class RulesPresenter : MonoBehaviour
     private LevelModel[] _levels;
     private RulesSettingsModel _rulesSettings = new();
     
-    internal UnityAction<RulesSettingsModel> onInputRulesSettings;
-    internal event UnityAction onInputClosePanel
-    {
-        add => _panel.onInputClose += value;
-        remove => _panel.onInputClose -= value;
-    }
+    internal Action<RulesSettingsModel> onInputRulesSettings;
+    internal Action<SoundModel> onInputSound;
+    internal Action onInputClosePanel;
 
     internal void OutputPanel(bool value) =>
         _panel.OutputOpen(value);
@@ -30,29 +26,6 @@ internal class RulesPresenter : MonoBehaviour
         _levelsToggles.OutputToggles(Array.ConvertAll(_levels, level => level.Icon));
     }
 
-    private void Awake()
-    {
-        _boardsToggles.onInput += InputBoard;
-        _levelsToggles.onInput += InputLevels;
-    }
-    private void OnDestroy()
-    {
-        _boardsToggles.onInput -= InputBoard;
-        _levelsToggles.onInput -= InputLevels;
-    }
-
-    private void InputBoard(int index)
-    {
-        _rulesSettings.board = _boards[index];
-        onInputRulesSettings.Invoke(_rulesSettings);
-    }
-
-    private void InputLevels(int index)
-    {
-        _rulesSettings.level = _levels[index];
-        onInputRulesSettings.Invoke(_rulesSettings);
-    }
-
     internal void OutputRules(RulesModel rules)
     {
         _rulesSettings.board = rules.board;
@@ -60,5 +33,39 @@ internal class RulesPresenter : MonoBehaviour
         
         _rulesSettings.level = rules.levels;
         _levelsToggles.OutputIsToggled(Array.IndexOf(_levels, _rulesSettings.level));
+    }
+
+    private void Awake()
+    {
+        _boardsToggles.onInput += InputBoard;
+        _levelsToggles.onInput += InputLevels;
+        _panel.onInputClose += InputClosePanel;
+    }
+
+    private void OnDestroy()
+    {
+        _boardsToggles.onInput -= InputBoard;
+        _levelsToggles.onInput -= InputLevels;
+        _panel.onInputClose -= InputClosePanel;
+    }
+
+    private void InputClosePanel()
+    {
+        onInputClosePanel.Invoke();
+        onInputSound.Invoke(SoundModel.Accept);
+    }
+
+    private void InputBoard(int index)
+    {
+        _rulesSettings.board = _boards[index];
+        onInputRulesSettings.Invoke(_rulesSettings);
+        onInputSound.Invoke(SoundModel.Accept);
+    }
+
+    private void InputLevels(int index)
+    {
+        _rulesSettings.level = _levels[index];
+        onInputRulesSettings.Invoke(_rulesSettings);
+        onInputSound.Invoke(SoundModel.Accept);
     }
 }

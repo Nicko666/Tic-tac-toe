@@ -1,4 +1,5 @@
 ﻿<Solution>
+  <Project Path="Presenters.csproj" />
   <Project Path="GamePresenter.csproj" />
   <Project Path="Components.csproj" />
   <Project Path="Models.csproj" />
@@ -7,6 +8,5 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="GameController.csproj" />
   <Project Path="GameModels.csproj" />
-  <Project Path="Presenters.csproj" />
   <Project Path="SettingsModels.csproj" />
 </Solution>

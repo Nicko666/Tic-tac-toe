@@ -17,15 +17,36 @@ public class BoardPresenter : MonoBehaviour
     bool _isInteractable = true;
 
     internal Action<GamePlayerModel[]> onPlayerQueueChanged;
-    internal event Action<Vector2Int> onInputTile;
-    internal event Action onInputClearBoard;
+    internal Action<SoundModel> onInputSound;
+    internal Action<Vector2Int> onInputTile;
+    internal Action onInputClearBoard;
 
     internal void OutputBoard(GameBoardModel board)
     {
         _board = board;
         _routines.Add(OutputBoardRoutine(_board, _duration));
+        IEnumerator OutputBoardRoutine(GameBoardModel board, float duration)
+        {
+            _isInteractable = false;
+
+            yield return new WaitForSeconds(duration);
+            _tilesPresenter.OutputTiles(board.Tiles, board.Lines);
+
+            _animator.SetBool(WinnerBool, board.Winner == null);
+
+            _isInteractable = true;
+        }
 
         _coroutine ??= StartCoroutine(OutputCoroutine());
+        IEnumerator OutputCoroutine()
+        {
+            while (_routines.Count > 0)
+            {
+                yield return _routines[0];
+                _routines.RemoveAt(0);
+            }
+            _coroutine = null;
+        }
 
         LineModel[] horizontalLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Horizontal);
         _horizontalLines.Output(horizontalLines);
@@ -59,31 +80,15 @@ public class BoardPresenter : MonoBehaviour
                 onInputTile.Invoke(tileIndex);
             else
                 onInputClearBoard.Invoke();
+
+            onInputSound.Invoke(SoundModel.Accept);
+        }
+        else
+        {
+            onInputSound.Invoke(SoundModel.Reject);
         }
     }
 
     private void OutputFieldCenter(Vector2 position) =>
         Array.ForEach(_centerObjects, i => i.position = new Vector3(position.x, position.y, i.position.z));
-
-    private IEnumerator OutputCoroutine()
-    {
-        while (_routines.Count > 0)
-        {
-            yield return _routines[0];
-            _routines.RemoveAt(0);
-        }
-        _coroutine = null;
-    }
-
-    private IEnumerator OutputBoardRoutine(GameBoardModel board, float duration)
-    {
-        _isInteractable = false;
-
-        yield return new WaitForSeconds(duration);
-        _tilesPresenter.OutputTiles(board.Tiles, board.Lines);
-
-        _animator.SetBool(WinnerBool, board.Winner == null);
-
-        _isInteractable = true;
-    }
 }

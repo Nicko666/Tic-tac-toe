@@ -12,12 +12,10 @@ internal class PlayerPresenter : MonoBehaviour
     private MarkModel[] _marks = new MarkModel[0];
     private LogicModel[] _logics = new LogicModel[0];
 
+    internal Action<SoundModel> onInputSound;
     internal UnityAction<PlayerSettingsModel> onInputPlayerSettings;
-    internal event UnityAction onInputClosePanel
-    {
-        add => _panel.onInputClose += value;
-        remove => _panel.onInputClose -= value;
-    }
+
+    internal UnityAction onInputClosePanel;
 
     private void Awake()
     {
@@ -25,6 +23,7 @@ internal class PlayerPresenter : MonoBehaviour
         _saturationSlider.onValueChanged += InputSaturation;
         _marksToggles.onInput += InputMark;
         _logicsToggles.onInput += InputLogic;
+        _panel.onInputClose += InputClosePanel;
 
         _hueSlider.OutputTexture(GetHueTexture(), Color.HSVToRGB(_playerSettings.hue, 1, 1));
         _saturationSlider.OutputTexture(GetSaturationTexture(), Color.HSVToRGB(_playerSettings.hue, _playerSettings.saturation, 1));
@@ -86,16 +85,24 @@ internal class PlayerPresenter : MonoBehaviour
         _logicsToggles.OutputToggles(Array.ConvertAll(_logics, logic => logic.Icon));
     }
 
+    private void InputClosePanel()
+    {
+        onInputClosePanel.Invoke();
+        onInputSound.Invoke(SoundModel.Accept);
+    }
+
     private void InputMark(int index)
     {
         _playerSettings.mark = _marks[index];
         onInputPlayerSettings.Invoke(_playerSettings);
+        onInputSound.Invoke(SoundModel.Accept);
     }
 
     private void InputLogic(int index)
     {
         _playerSettings.logic = _logics[index];
         onInputPlayerSettings.Invoke(_playerSettings);
+        onInputSound.Invoke(SoundModel.Accept);
     }
 
     private void InputHue(float hue)

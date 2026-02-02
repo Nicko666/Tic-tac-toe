@@ -4,29 +4,47 @@ using UnityEngine.Events;
 
 public class MenuPresenter : MonoBehaviour
 {
-    [SerializeField] private LoadinfPresenter _screenPresenter;
+    [SerializeField] private ScreenPresenter _screenPresenter;
     [SerializeField] private PlayerPresenter _playerPresenter;
     [SerializeField] private SettingsPresenter _settingsPresenter;
     [SerializeField] private RulesPresenter _rulesPresenter;
+    private PanelsController _panelsController = new();
     private PlayerModel _selectedPlayerModel;
 
     public event UnityAction<PlayerModel, PlayerSettingsModel> onInputPlayerSettings;
-    public event UnityAction onInputAddPlayer
+    public event Action<SoundModel> onInputSound
+    {
+        add
+        {
+            _settingsPresenter.onInputSound += value;
+            _screenPresenter.onInputSound += value;
+            _playerPresenter.onInputSound += value;
+            _rulesPresenter.onInputSound += value;
+        }
+        remove
+        {
+            _settingsPresenter.onInputSound -= value;
+            _screenPresenter.onInputSound -= value;
+            _playerPresenter.onInputSound -= value;
+            _rulesPresenter.onInputSound -= value;
+        }
+    }
+    public event Action onInputAddPlayer
     {
         add => _screenPresenter.onInputAddLastPlayer += value;
         remove => _screenPresenter.onInputAddLastPlayer -= value;
     }
-    public event UnityAction onInputRemoveLastPlayer
+    public event Action onInputRemoveLastPlayer
     {
         add => _screenPresenter.onInputRemoveLastPlayer += value;
         remove => _screenPresenter.onInputRemoveLastPlayer -= value;
     }
-    public event UnityAction<PlayerModel> onInputRemovePlayer
+    public event Action<PlayerModel> onInputRemovePlayer
     {
         add => _screenPresenter.onInputRemovePlayer += value;
         remove => _screenPresenter.onInputRemovePlayer -= value;
     }
-    public event UnityAction<PlayerModel, int> onInputPlayerIndex
+    public event Action<PlayerModel, int> onInputPlayerIndex
     {
         add => _screenPresenter.onInputPlayerIndex += value;
         remove => _screenPresenter.onInputPlayerIndex -= value;
@@ -36,12 +54,12 @@ public class MenuPresenter : MonoBehaviour
         add => _screenPresenter.onInputPlayButton += value;
         remove => _screenPresenter.onInputPlayButton -= value;
     }
-    public event Action<SettingsModel> onInputSettings
+    public event Action<SettingsOutputModel> onInputSettings
     {
         add => _settingsPresenter.onInputSettings += value;
         remove => _settingsPresenter.onInputSettings -= value;
     }
-    public event UnityAction<RulesSettingsModel> onInputRulesSettings
+    public event Action<RulesSettingsModel> onInputRulesSettings
     {
         add => _rulesPresenter.onInputRulesSettings += value;
         remove => _rulesPresenter.onInputRulesSettings -= value;
@@ -59,9 +77,9 @@ public class MenuPresenter : MonoBehaviour
         _rulesPresenter.OutputDatabase(boards, levelsModels);
     }
 
-    public void OutputSettingsDatabase(SettingsDatabase settingsDatabase)
+    public void OutputFrameIntervals(FrameIntervalModel[] frameIntervals)
     {
-        _settingsPresenter.OutputDatabase(settingsDatabase);
+        _settingsPresenter.OutputFrameIntervals(frameIntervals);
     }
 
     public void OutputPlayers(PlayerModel[] players)
@@ -78,47 +96,50 @@ public class MenuPresenter : MonoBehaviour
         _playerPresenter.onInputPlayerSettings += InputPlayerSettings;
         _settingsPresenter.onInputClosePanel += InputClosePanel;
         _rulesPresenter.onInputClosePanel += InputClosePanel;
+        _panelsController.onInputPanel += InputOpenPanel;
     }
-    private void Start()
+    private void Start() =>
+        _panelsController.SetPanel(PanelModel.None);
+
+    private void InputOpenPanel(PanelModel panel)
     {
-        InputPanel(PanelModel.None);
+        _screenPresenter.OutputPanel(panel == PanelModel.None);
+        _playerPresenter.OutputPanel(panel == PanelModel.Player);
+        _rulesPresenter.OutputPanel(panel == PanelModel.Rules);
+        _settingsPresenter.OutputPanel(panel == PanelModel.Settings);
     }
 
-    private void InputPanel(PanelModel panelModel)
+    private void InputPanel(PanelModel panel)
     {
         _selectedPlayerModel = null;
         _playerPresenter.OutputPlayer(_selectedPlayerModel);
-        
-        _screenPresenter.OutputPanel(panelModel == PanelModel.None);
-        _playerPresenter.OutputPanel(panelModel == PanelModel.Player);
-        _rulesPresenter.OutputPanel(panelModel == PanelModel.Rules);
-        _settingsPresenter.OutputPanel(panelModel == PanelModel.Settings);
+        _panelsController.SetPanel(panel);
     }
     private void InputClosePanel()
     {
         _selectedPlayerModel = null;
         _playerPresenter.OutputPlayer(_selectedPlayerModel);
-        
-        _screenPresenter.OutputPanel(true);
-        _playerPresenter.OutputPanel(false);
-        _rulesPresenter.OutputPanel(false);
-        _settingsPresenter.OutputPanel(false);
+        _panelsController.SetPanel(PanelModel.None);
     }
 
     private void InputPlayer(PlayerModel playerModel)
     {
         _selectedPlayerModel = playerModel;
         _playerPresenter.OutputPlayer(_selectedPlayerModel);
-        
-        _screenPresenter.OutputPanel(false);
-        _playerPresenter.OutputPanel(true);
-        _screenPresenter.OutputPanel(false);
-        _settingsPresenter.OutputPanel(false);
+        _panelsController.SetPanel(PanelModel.Player);
     }
 
     private void InputPlayerSettings(PlayerSettingsModel playerSettings) =>
         onInputPlayerSettings.Invoke(_selectedPlayerModel, playerSettings);
 
-    public void OutputSettings(SettingsModel model) =>
+    public void OutputSettings(SettingsOutputModel model) =>
         _settingsPresenter.OutputSettings(model);
+
+    class PanelsController
+    {
+        internal Action<PanelModel> onInputPanel;
+
+        internal void SetPanel(PanelModel panel) =>
+            onInputPanel?.Invoke(panel);
+    }
 }

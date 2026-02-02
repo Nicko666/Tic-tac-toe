@@ -13,6 +13,7 @@ internal class GamePlayersPresenter : MonoBehaviour
 
     internal Action<PanelModel> onInputGamePlayers;
     internal Action<SceneModel> onInputScene;
+    internal Action<SoundModel> onInputSound;
 
     internal void OutputPanel(bool value) =>
         _panel.OutputOpen(value);
@@ -43,9 +44,15 @@ internal class GamePlayersPresenter : MonoBehaviour
         _panel.onInputClose -= InputBoard;
     }
 
-    private void InputBoard() =>
+    private void InputBoard()
+    {
         onInputGamePlayers.Invoke(PanelModel.Board);
+        onInputSound.Invoke(SoundModel.Accept);
+    }
 
-    private void InputMenuScene() =>
+    private void InputMenuScene()
+    {
         onInputScene.Invoke(SceneModel.MenuScene);
+        onInputSound.Invoke(SoundModel.Accept);
+    }
 }

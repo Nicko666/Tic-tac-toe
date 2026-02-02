@@ -7,7 +7,12 @@ internal class GameMain : IMain
     [SerializeField] private GamePresenter _gamePresenter;
 
     internal override event Action onInputSaveProgress;
-    internal override event Action<SettingsModel> onInputSettings
+    internal override event Action<SoundModel> onInputSound
+    {
+        add => _gamePresenter.onInputSound += value;
+        remove => _gamePresenter.onInputSound -= value;
+    }
+    internal override event Action<SettingsOutputModel> onInputSettings
     {
         add => _gamePresenter.onInputSettings += value;
         remove => _gamePresenter.onInputSettings -= value;
@@ -24,17 +29,17 @@ internal class GameMain : IMain
     internal override void OutputRules(RulesModel rules) =>
         _gameController.LoadRules(rules);
 
-    internal override void OutputSettings(SettingsModel settings) =>
+    internal override void OutputSettings(SettingsOutputModel settings) =>
         _gamePresenter.OutputSettings(settings);
 
     internal override void OutputProgressDatabase(ProgressDatabase database) { }
 
-    internal override void LoadProgressData(ProgressData data) { }
+    internal override void OutputLoadedProgressData(ProgressData data) { }
 
-    internal override void OutputSettingsDatabase(SettingsDatabase SettingsDatabase) =>
-        _gamePresenter.OutputSettingsDatabase(SettingsDatabase);
+    internal override void OutputFrameIntervals(FrameIntervalModel[] frameIntervals) =>
+        _gamePresenter.OutputFrameIntervals(frameIntervals);
 
-    internal override void SaveProgressData(ref ProgressData data) { }
+    internal override void OutputSavedProgressData(ref ProgressData data) { }
 
     private void Awake()
     {

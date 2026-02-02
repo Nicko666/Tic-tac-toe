@@ -13,7 +13,7 @@ public class ProgressData
 }
 
 [Serializable]
-public class PlayerData
+public struct PlayerData
 {
     public int logicID;
     public int markID;

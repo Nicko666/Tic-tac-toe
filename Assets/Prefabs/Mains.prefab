@@ -46,4 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Mains
   _mains: []
   _progressDatabase: {fileID: 11400000, guid: 93127011855e17244b4b1b93cbc23012, type: 2}
-  _presenterPrefab: {fileID: 6396134178504620899, guid: 7d58ee949b96999488515dcae5d080f5, type: 3}
+  _loadingPresenterPrefab: {fileID: 6396134178504620899, guid: 7d58ee949b96999488515dcae5d080f5, type: 3}
+  _soundPresenterPrefab: {fileID: 2719589946637143933, guid: 3f2d8219f536281439f5d4de603edf6c, type: 3}

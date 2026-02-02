@@ -1,21 +1,38 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class GamePresenter : MonoBehaviour
 {
-    PanelsController _panelsController = new();
+    private PanelsController _panelsController = new();
     [SerializeField] private BoardPresenter _board;
     [SerializeField] private StatusPresenter _status;
     [SerializeField] private GamePlayersPresenter _gamePlayers;
     [SerializeField] private SettingsPresenter _settings;
-    [SerializeField] private float _computerDuration;
-    
+    [SerializeField] private float _actionTime;
+    public event Action<SoundModel> onInputSound
+    {
+        add
+        {
+            _board.onInputSound += value;
+            _status.onInputSound += value;
+            _gamePlayers.onInputSound += value;
+            _settings.onInputSound += value;
+        }
+        remove
+        {
+            _board.onInputSound -= value;
+            _status.onInputSound -= value;
+            _gamePlayers.onInputSound -= value;
+            _settings.onInputSound -= value;
+        }
+    }
     public event Action<Vector2Int> onInputTile
     {
         add => _board.onInputTile += value;
         remove => _board.onInputTile -= value;
     }
-    public event Action<SettingsModel> onInputSettings
+    public event Action<SettingsOutputModel> onInputSettings
     {
         add => _settings.onInputSettings += value;
         remove => _settings.onInputSettings -= value;
@@ -31,21 +48,28 @@ public class GamePresenter : MonoBehaviour
         remove => _gamePlayers.onInputScene -= value;
     }
 
-    public void OutputSettingsDatabase(SettingsDatabase settingsDatabase) =>
-        _settings.OutputDatabase(settingsDatabase);
-    public void OutputSettings(SettingsModel settings) =>
+    public void OutputFrameIntervals(FrameIntervalModel[] frameIntervals) =>
+        _settings.OutputFrameIntervals(frameIntervals);
+    public void OutputSettings(SettingsOutputModel settings) =>
         _settings.OutputSettings(settings);
 
     public void OutputBoard(GameBoardModel gameBoard) =>
         _board.OutputBoard(gameBoard);
 
-    public void OutputPlayers(GamePlayersModel gamePlayers)
+    public void OutputPlayers(GamePlayersModel gamePlayers) =>
+        StartCoroutine(OutputPlayersRoutine(gamePlayers));
+
+    private IEnumerator OutputPlayersRoutine(GamePlayersModel gamePlayers)
     {
         _gamePlayers.OutputGamePlayers(gamePlayers);
+
+        yield return new WaitForSeconds(_actionTime);
+
         if (gamePlayers.winner != null)
             _panelsController.InputPanel(PanelModel.Players);
     }
-    
+
+
     private void Awake()
     {
         _status.onInputPanel += _panelsController.InputPanel;
@@ -74,8 +98,8 @@ public class GamePresenter : MonoBehaviour
     public void OutputPlayersQueue(GamePlayerModel[] gamePlayers)
     {
         bool isComputer = gamePlayers[0].player.logic.Logic != LogicModel.LogicType.Player;
-        _board.OutputDelay(isComputer ? _computerDuration : 0); 
-        _status.OutputPlayer(gamePlayers[0], isComputer ? _computerDuration : 0);
+        _board.OutputDelay(isComputer ? _actionTime : 0); 
+        _status.OutputPlayer(gamePlayers[0], isComputer ? _actionTime : 0);
     }
 
     class PanelsController

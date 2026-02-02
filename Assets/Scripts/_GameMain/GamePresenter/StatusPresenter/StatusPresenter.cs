@@ -13,31 +13,19 @@ public class StatusPresenter : MonoBehaviour
     private Coroutine _coroutine = null;
 
     internal Action<PanelModel> onInputPanel;
+    internal Action<SoundModel> onInputSound;
 
     internal void OutputPanel(bool isOpen) =>
         _panel.OutputOpen(isOpen);
-    
-    private void Awake()
-    {
-        _settingsButton.onClick.AddListener(InputSettings);
-        _gamePlayersButton.onClick.AddListener(InputGamePlayers);
-
-    }
-    private void OnDestroy()
-    {
-        _settingsButton.onClick.RemoveListener(InputSettings);
-        _gamePlayersButton.onClick.RemoveListener(InputGamePlayers);
-    }
-
-    private void InputSettings() =>
-        onInputPanel.Invoke(PanelModel.Settings);
-
-    private void InputGamePlayers() =>
-        onInputPanel.Invoke(PanelModel.Players);
 
     internal void OutputPlayer(GamePlayerModel gamePlayerModel, float duration)
     {
         _routines.Add(OutputPlayerRoutine(gamePlayerModel.player, duration));
+        IEnumerator OutputPlayerRoutine(PlayerModel player, float duration)
+        {
+            _playersQueue.OutputPlayer(player);
+            yield return new WaitForSeconds(duration);
+        }
 
         _coroutine ??= StartCoroutine(OutputQueueCoroutine());
         IEnumerator OutputQueueCoroutine()
@@ -51,9 +39,27 @@ public class StatusPresenter : MonoBehaviour
         }
     }
 
-    IEnumerator OutputPlayerRoutine(PlayerModel player, float duration)
+    private void Awake()
     {
-        _playersQueue.OutputPlayer(player);
-        yield return new WaitForSeconds(duration);
+        _settingsButton.onClick.AddListener(InputSettings);
+        _gamePlayersButton.onClick.AddListener(InputGamePlayers);
+
+    }
+    private void OnDestroy()
+    {
+        _settingsButton.onClick.RemoveListener(InputSettings);
+        _gamePlayersButton.onClick.RemoveListener(InputGamePlayers);
+    }
+
+    private void InputSettings()
+    {
+        onInputPanel.Invoke(PanelModel.Settings);
+        onInputSound.Invoke(SoundModel.Accept);
+    }
+
+    private void InputGamePlayers()
+    {
+        onInputPanel.Invoke(PanelModel.Players);
+        onInputSound.Invoke(SoundModel.Accept);
     }
 }

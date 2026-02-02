@@ -1,44 +1,53 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SettingsPresenter : MonoBehaviour
 {
     [SerializeField] private PanelView _panel;
-    [SerializeField] private TogglesTextView _togglesText;
+    [SerializeField] private TogglesTextView _framesTogglesText;
     [SerializeField] private Slider _volumeSlider;
     
-    private SettingsModel _settings;
-    private SettingsDatabase _appDatabase;
+    private FrameIntervalModel[] _frameIntervals = new FrameIntervalModel[0];
+    private SettingsOutputModel _settings;
 
-    public event UnityAction onInputClosePanel
-    {
-        add => _panel.onInputClose += value;
-        remove => _panel.onInputClose -= value;
-    }
-    public Action<SettingsModel> onInputSettings;
+    public Action onInputClosePanel;
+    public Action<SettingsOutputModel> onInputSettings;
+    public Action<SoundModel> onInputSound;
 
-    public void OutputDatabase(SettingsDatabase appDatabase)
+    public void OutputFrameIntervals(FrameIntervalModel[] frameIntervals)
     {
-        _appDatabase = appDatabase;
-        _togglesText.OutputToggles(Array.ConvertAll(_appDatabase.FrameIntervals, i => $"{i.FramesCount}p"));
+        _frameIntervals = frameIntervals;
+        _framesTogglesText.OutputToggles(Array.ConvertAll(_frameIntervals, i => $"{i.FramesCount}p"));
+        if (Array.Exists(_frameIntervals, i => i.Interval == _settings.frameInteravl.Interval))
+            _framesTogglesText.OutputIsToggled(Array.FindIndex(_frameIntervals, i => i.Interval == _settings.frameInteravl.Interval));
+
+        _framesTogglesText.gameObject.SetActive(_frameIntervals.Length > 1);
     }
 
     public void OutputPanel(bool value) =>
         _panel.OutputOpen(value);
 
-    public void OutputSettings(SettingsModel settings)
+    public void OutputSettings(SettingsOutputModel settings)
     {
+        Debug.Log($"OutputSettings{settings.frameInteravl.Interval}/{settings.frameInteravl.FramesCount}");
         _settings = settings;
+        Debug.Log($"OutputSettings{_settings.frameInteravl.Interval}/{_settings.frameInteravl.FramesCount}");
         _volumeSlider.SetValueWithoutNotify(_settings.volume);
-        _togglesText.OutputIsToggled(Array.IndexOf(_appDatabase.FrameIntervals, settings.frameInteravl));
+        _framesTogglesText.OutputIsToggled(Array.FindIndex(_frameIntervals, i => i.Interval == _settings.frameInteravl.Interval));
     }
 
     private void Awake()
     {
         _volumeSlider.onValueChanged.AddListener(InputVolume);
-        _togglesText.onInput += InputFPS;
+        _framesTogglesText.onInput += InputFPS;
+        _panel.onInputClose += InputClosePanel;
+    }
+
+    private void InputClosePanel()
+    {
+        onInputClosePanel.Invoke();
+        onInputSound.Invoke(SoundModel.Accept);
     }
 
     private void InputVolume(float value)
@@ -49,7 +58,8 @@ public class SettingsPresenter : MonoBehaviour
 
     private void InputFPS(int index)
     {
-        _settings.frameInteravl = _appDatabase.FrameIntervals[index];
+        _settings.frameInteravl = _frameIntervals[index];
         onInputSettings.Invoke(_settings);
+        onInputSound.Invoke(SoundModel.Accept);
     }
 }
