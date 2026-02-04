@@ -30,9 +30,7 @@ public class SettingsPresenter : MonoBehaviour
 
     public void OutputSettings(SettingsOutputModel settings)
     {
-        Debug.Log($"OutputSettings{settings.frameInteravl.Interval}/{settings.frameInteravl.FramesCount}");
         _settings = settings;
-        Debug.Log($"OutputSettings{_settings.frameInteravl.Interval}/{_settings.frameInteravl.FramesCount}");
         _volumeSlider.SetValueWithoutNotify(_settings.volume);
         _framesTogglesText.OutputIsToggled(Array.FindIndex(_frameIntervals, i => i.Interval == _settings.frameInteravl.Interval));
     }

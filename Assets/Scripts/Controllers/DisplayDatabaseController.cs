@@ -19,7 +19,6 @@ internal class DisplayDatabaseController
         {
             int framesCount = screenFrameRate / (interval + 1);
             frameIntervals.Add(new(interval, framesCount));
-            Debug.Log($"{interval}/{framesCount} added");
             interval++;
         }
         while (screenFrameRate / (interval + 1) >= MinFramesCount);

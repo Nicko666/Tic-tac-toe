@@ -1,24 +1,15 @@
-using System;
-
 internal class TilesController
 {
     private TileModel[,] _tiles = new TileModel[0,0];
 
-    internal Action<TileModel[,]> onChanged;
+    internal TileModel[,] Get() =>
+        _tiles;
 
-    internal void SetTiles(int squearCount)
-    {
+    internal TileModel[,] Load(int squearCount) =>
         _tiles = new TileModel[squearCount, squearCount];
 
-        onChanged.Invoke(_tiles);
-    }
-
-    internal void ClearTiles()
-    {
+    internal TileModel[,] ClearTiles() =>
         _tiles = new TileModel[_tiles.GetLength(0), _tiles.GetLength(0)];
-
-        onChanged?.Invoke(_tiles);
-    }
 
     internal void FillTile((int x, int y) index, PlayerModel playerModel)
     {
@@ -30,18 +21,5 @@ internal class TilesController
         for (int x = 0; x < _tiles.GetLength(0); x++)
             for (int y = 0; y < _tiles.GetLength(1); y++)
                 _tiles[x, y].player = (x == index.x && y == index.y) ? playerModel : oldTiles[x, y].player;
-
-        onChanged?.Invoke(_tiles);
     }
-    /*
-    internal bool HasEmpty(in TileModel[,] tiles)
-    {
-        foreach (var tile in tiles)
-            if (tile.player == null)
-                return true;
-
-        return false;
-    }
-    */
-
 }

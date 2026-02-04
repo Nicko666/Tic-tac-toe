@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 public class MenuPlayersController
 {
-    private int _minPlayersCount;
     private readonly List<PlayerModel> _players = new();
     private PlayerPool _playerPool;
+
+    private int _minPlayersCount;
 
     public Action<PlayerModel[]> onChanged;
     public Action onInputSaveProgress;

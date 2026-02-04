@@ -979,7 +979,7 @@ MonoBehaviour:
   _scrollUpHoover: {fileID: 462549624}
   _scrollDownHoover: {fileID: 280299154}
   _scrollSensitivity: 2.5
-  _itemsSpeed: 0.1
+  _itemsSpeed: 1.5
 --- !u!114 &459988126
 MonoBehaviour:
   m_ObjectHideFlags: 0

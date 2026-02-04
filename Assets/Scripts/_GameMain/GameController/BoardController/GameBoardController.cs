@@ -7,27 +7,38 @@ internal class GameBoardController
     private System.Random _random = new();
     private TilesController _tilesController = new();
     private LineController _lineController = new();
+    private WinnerController _winnerController = new();
+    private IsInteractableController _isInteractableController = new();
 
-    private TileModel[,] _tiles;
-    private LineModel[] _lines;
-    private PlayerModel _winner;
-    private bool _isInteractable;
-    private PlayerModel _player;
+    //private TileModel[,] _tiles;
+    //private LineModel[] _lines;
+    //private PlayerModel _winner;
+    //private bool _isInteractable;
+
+    //private PlayerModel _player;
     
     internal Action<GameBoardModel> onChanged;
 
-    internal GameBoardController()
+    public void Load(int tilesSqCount)
     {
-        _tilesController.onChanged += OutputTiles;
-    }
+        _tilesController.Load(tilesSqCount);
+        TileModel[,] tiles = _tilesController.Get();
 
-    public void Load(int tilesSqCount) =>
-        _tilesController.SetTiles(tilesSqCount);
+        _lineController.Set(tiles);
+        LineModel[] lines = _lineController.Get();
+
+        _winnerController.Set(lines);
+        PlayerModel winner = _winnerController.Get();
+
+        _isInteractableController.Set(tiles, winner);
+        bool isInteractable = _isInteractableController.Get();
+
+        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
+    }
 
     internal void SetPlayer(PlayerModel player)
     {
-        _player = player;
-
+        /*
         if (_player.logic.Logic == LogicModel.LogicType.Player || !_isInteractable) return;
 
         Dictionary<(int x, int y), int> tilesPoints = new();
@@ -76,33 +87,40 @@ internal class GameBoardController
         _tilesController.FillTile(tileIndex, _player);
 
         return;
+        */
     }
 
-    internal void Restart() =>
-        _tilesController.ClearTiles();
-
-    internal void SetTile(Vector2Int index) =>
-        _tilesController.FillTile(new(index.x, index.y), _player);
-
-    private void OutputTiles(TileModel[,] tiles)
+    internal void Restart()
     {
-        _tiles = tiles;
+        _tilesController.ClearTiles();
+        TileModel[,] tiles = _tilesController.Get();
 
-        _lines = _lineController.SetLines(_tiles);
+        _lineController.Set(tiles);
+        LineModel[] lines = _lineController.Get();
 
-        _winner = Array.Exists(_lines, i => i.winner != null) ? _winner = Array.Find(_lines, i => i.winner != null).winner : null;
-        
-        bool hasEmptyTile = false;
-        foreach (TileModel tile in _tiles)
-                if (tile.player == null)
-                {
-                    hasEmptyTile = true;
-                    break;
-                }
+        _winnerController.Set(lines);
+        PlayerModel winner = _winnerController.Get();
 
-        _isInteractable = hasEmptyTile && _winner == null;
-        
-        onChanged.Invoke(new GameBoardModel(_tiles, _lines, _winner, _isInteractable));
+        _isInteractableController.Set(tiles, winner);
+        bool isInteractable = _isInteractableController.Get();
+
+        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
     }
 
+    internal void SetTile(Vector2Int index, PlayerModel player)
+    {
+        _tilesController.FillTile(new(index.x, index.y), player);
+        TileModel[,] tiles = _tilesController.Get();
+
+        _lineController.Set(tiles);
+        LineModel[] lines = _lineController.Get();
+
+        _winnerController.Set(lines);
+        PlayerModel winner = _winnerController.Get();
+
+        _isInteractableController.Set(tiles, winner);
+        bool isInteractable = _isInteractableController.Get();
+
+        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
+    }
 }

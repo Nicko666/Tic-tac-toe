@@ -3,8 +3,11 @@ using System;
 internal class LineController
 {
     LineModel[] _lines = new LineModel[0];
-    
-    internal LineModel[] SetLines(TileModel[,] tiles)
+
+    internal LineModel[] Get() => 
+        _lines;
+
+    internal LineModel[] Set(TileModel[,] tiles)
     {
         int length = tiles.GetLength(0);
         _lines = new LineModel[length * 2 + 2];

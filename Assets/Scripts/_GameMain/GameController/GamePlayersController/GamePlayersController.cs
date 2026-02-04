@@ -12,14 +12,14 @@ public class GamePlayersController
         _maxPoints = points;
     }
 
-    internal void LoadGamePlayers(PlayerModel[] players)
+    internal void LoadPlayers(PlayerModel[] players)
     {
         _gamePlayers.gamePlayers = Array.ConvertAll(players, player => new GamePlayerModel(player));
 
         onChanged?.Invoke(_gamePlayers);
     }
 
-    internal void AddPoint(PlayerModel winner)
+    internal void SetPoints(PlayerModel winner)
     {
         if (!Array.Exists(_gamePlayers.gamePlayers, i => i.player == winner)) return;
 
@@ -31,28 +31,4 @@ public class GamePlayersController
 
         onChanged?.Invoke(_gamePlayers);
     }
-
-
-
-
-
-    /*
-    internal void SetBoardFilled(GameBoardModel gameBoard)
-    {
-        if (gameBoard.winner == null)
-        {
-            if (gameBoard.isInteractable)
-                onPointMissed.Invoke(_gamePlayers);
-        }
-        else
-        {
-            int gamePlayerIndex = Array.FindIndex(_gamePlayers.gamePlayers, i => i.player == gameBoard.winner);
-            _gamePlayers.gamePlayers[gamePlayerIndex].points++;
-
-            if (Array.Exists(_gamePlayers.gamePlayers, gamePlayer => gamePlayer.points >= _winPoints))
-                _gamePlayers.winner = Array.Find(_gamePlayers.gamePlayers, gamePlayer => gamePlayer.points >= _winPoints).player;
-
-            onPointAdded.Invoke(_gamePlayers);
-        }
-    }*/
 }

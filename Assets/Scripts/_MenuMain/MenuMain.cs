@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 [Serializable]
 internal class MenuMain : IMain

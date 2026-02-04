@@ -1,12 +1,12 @@
 ﻿<Solution>
   <Project Path="Presenters.csproj" />
   <Project Path="GamePresenter.csproj" />
+  <Project Path="GameController.csproj" />
   <Project Path="Components.csproj" />
   <Project Path="Models.csproj" />
   <Project Path="MenuPresenter.csproj" />
   <Project Path="MenuController.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="GameController.csproj" />
   <Project Path="GameModels.csproj" />
   <Project Path="SettingsModels.csproj" />
 </Solution>

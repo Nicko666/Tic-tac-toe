@@ -34,8 +34,6 @@ internal class TilesPresenter : MonoBehaviour, IPointerClickHandler
                 }
             }
 
-
-        onCenterChanged.Invoke
-            ((_tilemap.GetCellCenterWorld(new(0, 0)) + _tilemap.GetCellCenterWorld(new(tiles.GetLength(0) - 1, tiles.GetLength(1) - 1))) / 2);
+        onCenterChanged.Invoke(_tilemap.localBounds.center);
     }
 }
