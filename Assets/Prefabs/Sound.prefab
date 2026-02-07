@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Presenters::SoundPresenter
   _audioSource: {fileID: 1335161157439037800}
-  _acceptClip: {fileID: 8300000, guid: 2dfc5ccdd857d4343a882b6f157d3a14, type: 3}
+  _acceptClip: {fileID: 8300000, guid: d905662e794616647b9c5103e4f4c4be, type: 3}
   _rejectClip: {fileID: 8300000, guid: d16eca08784f4e446939b9de92503082, type: 3}
+  _moveClip: {fileID: 8300000, guid: e605e64f9feca324f9b5de765814049b, type: 3}
 --- !u!82 &1335161157439037800
 AudioSource:
   m_ObjectHideFlags: 0

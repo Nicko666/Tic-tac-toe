@@ -1,5 +1,3 @@
-using System;
-
 public class IsInteractableController
 {
     private bool _isInteractable;

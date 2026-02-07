@@ -66,10 +66,9 @@ internal class PlayersListPresenter : MonoBehaviour
 
             _items[oldIndex] = new(_items[oldIndex].cell, _items[i].item, _items[i].model);
             _items[i] = new(_items[i].cell, playerPresenter, playerModel);
-            if (_items[i].item != _draggingItem)
-                StartCoroutine(SetParentRoutne(_items[i].cell, _items[i].item));
-                //_items[i].item.transform.SetParent(_items[i].cell, false);
-
+            
+            StartCoroutine(SetParentRoutne(_items[i].cell, _items[i].item));
+              
             _items[i].item.OutputPlayer(players[i]);
             _items[i].item.OutputIsDraggin(_draggingItem != null);
         }
@@ -80,15 +79,20 @@ internal class PlayersListPresenter : MonoBehaviour
 
     private IEnumerator SetParentRoutne(Transform cell, PlayersListItemPresenter item)
     {
-        item.transform.SetParent(cell, true);
-
-        while (item.transform.localPosition != Vector3.zero && _itemsSpeed > 0)
+        if (item == _draggingItem)
+            _draggingItem.transform.SetParent(_draggedItemContent, true);
+        else
         {
-            item.transform.localPosition = Vector3.MoveTowards(item.transform.localPosition, Vector3.zero, _itemsSpeed/Time.deltaTime);
-            yield return null;
-        }
+            item.transform.SetParent(cell, true);
 
-        item.transform.localPosition = Vector3.zero;
+            while (item.transform.localPosition != Vector3.zero && _itemsSpeed > 0)
+            {
+                item.transform.localPosition = Vector2.MoveTowards(item.transform.localPosition, Vector3.zero, _itemsSpeed / Time.deltaTime);
+                yield return null;
+            }
+
+            item.transform.localPosition = Vector3.zero;
+        }
     }
 
     private void Awake()
@@ -151,12 +155,10 @@ internal class PlayersListPresenter : MonoBehaviour
         if (isHolding)
         {
             _draggingItem = item;
-            _draggingItem?.transform.SetParent(_draggedItemContent);
             onInputSound.Invoke(SoundModel.Accept);
         }
         else
         {
-            _draggingItem?.transform.SetParent(_items.Find(i => i.item == item).cell, false);
             _draggingItem = null;
             onInputSound.Invoke(SoundModel.Accept);
         }
@@ -164,9 +166,7 @@ internal class PlayersListPresenter : MonoBehaviour
 
         StopAllCoroutines();
         for (int i = 0; i < _items.Count; i++)
-            if (_items[i].item != _draggingItem)
-                StartCoroutine(SetParentRoutne(_items[i].cell, _items[i].item));
-                //_items[i].item.transform.SetParent(_items[i].cell, false);
+            StartCoroutine(SetParentRoutne(_items[i].cell, _items[i].item));
 
         _canvases.OutputDragged(_draggingItem != null);
     }

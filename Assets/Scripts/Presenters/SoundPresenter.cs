@@ -3,14 +3,15 @@ using UnityEngine;
 public class SoundPresenter : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private AudioClip _acceptClip, _rejectClip;
+    [SerializeField] private AudioClip _acceptClip, _rejectClip, _moveClip;
 
     public void OutputSound(SoundModel sound)
     {
         AudioClip clip = sound switch 
-        { 
-            SoundModel.Accept => _acceptClip, 
-            _ => _rejectClip, 
+        {
+            SoundModel.Move => _moveClip,
+            SoundModel.Reject => _rejectClip, 
+            _ => _acceptClip,
         };
 
         _audioSource.PlayOneShot(clip);

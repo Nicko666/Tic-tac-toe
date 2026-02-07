@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class BoardPresenter : MonoBehaviour
 {
@@ -35,6 +36,15 @@ public class BoardPresenter : MonoBehaviour
             _animator.SetBool(WinnerBool, board.Winner == null);
 
             _isInteractable = true;
+
+            LineModel[] horizontalLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Horizontal);
+            _horizontalLines.Output(horizontalLines);
+            LineModel[] verticalLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Vertical);
+            _verticalLines.Output(verticalLines);
+            LineModel[] upLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Up);
+            _upLines.Output(upLines);
+            LineModel[] downLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Down);
+            _downLines.Output(downLines);
         }
 
         _coroutine ??= StartCoroutine(OutputCoroutine());
@@ -47,15 +57,6 @@ public class BoardPresenter : MonoBehaviour
             }
             _coroutine = null;
         }
-
-        LineModel[] horizontalLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Horizontal);
-        _horizontalLines.Output(horizontalLines);
-        LineModel[] verticalLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Vertical);
-        _verticalLines.Output(verticalLines);
-        LineModel[] upLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Up);
-        _upLines.Output(upLines);
-        LineModel[] downLines = Array.FindAll(board.Lines, i => i.winner != null && i.direction == LineModel.DirectionType.Down);
-        _downLines.Output(downLines);
     }
 
     internal void OutputDelay(float duration) =>
@@ -65,11 +66,13 @@ public class BoardPresenter : MonoBehaviour
     {
         _tilesPresenter.onCenterChanged += OutputFieldCenter;
         _tilesPresenter.onInputTile += InputTile;
+        _tilesPresenter.onInputSound += InputSound;
     }
     private void OnDestroy()
     {
         _tilesPresenter.onCenterChanged -= OutputFieldCenter;
         _tilesPresenter.onInputTile -= InputTile;
+        _tilesPresenter.onInputSound -= InputSound;
     }
 
     private void InputTile(Vector2Int tileIndex)
@@ -91,4 +94,7 @@ public class BoardPresenter : MonoBehaviour
 
     private void OutputFieldCenter(Vector2 position) =>
         Array.ForEach(_centerObjects, i => i.position = new Vector3(position.x, position.y, i.position.z));
+
+    private void InputSound(SoundModel sound) =>
+        onInputSound.Invoke(sound);
 }

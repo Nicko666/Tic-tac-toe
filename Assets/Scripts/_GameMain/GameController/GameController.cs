@@ -6,7 +6,7 @@ public class GameController
     private GamePlayersController _playersController = new();
     private GameBoardController _boardController = new();
     private GamePlayersQueueController _playersQueueController = new();
-    private GamePlayerLogicController _playerController = new();
+    private GamePlayerController _playerController = new();
 
     public Action<GameBoardModel> onBoardChanged;
     public Action<GamePlayersModel> onPlayersChanged;
@@ -16,7 +16,7 @@ public class GameController
     {
         _playersController.onChanged += OutputPlayersChanged;
         _playersQueueController.onChanged += OutputPlayersQueueChanged;
-        _playerController.onInput += OutputTile;
+        _playerController.onInputTile += OutputTile;
         _boardController.onChanged += OutputBoardChanged;
     }
 

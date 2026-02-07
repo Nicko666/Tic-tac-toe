@@ -188,9 +188,9 @@ TextureImporter:
       name: Lines_3
       rect:
         serializedVersion: 2
-        x: 1248
+        x: 1200
         y: 720
-        width: 432
+        width: 480
         height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

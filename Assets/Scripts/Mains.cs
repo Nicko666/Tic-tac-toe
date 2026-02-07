@@ -27,10 +27,11 @@ internal class Mains : MonoBehaviour
         DontDestroyOnLoad(SoundPresenter ??= Instantiate(_soundPresenterPrefab));
 
         _progressDataController = new(Application.persistentDataPath, ProgressFileName, ProgressEncryptionCode);
+        _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
+
         _progressDataController.onDataLoaded += OutputProgressDataLoaded;
         _progressDataController.onDataSaved += OutputProgressDataSaved;
 
-        _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
         _settingsDataController.onDataLoaded += OutputSettingsDataLoaded;
         _settingsDataController.onDataSaved += OutputSettingsDataSaved;
 

@@ -10,7 +10,7 @@ internal class DisplayDatabaseController
 
     internal void Set()
     {
-        int screenFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+        int screenFrameRate = (int)Screen.resolutions[^1].refreshRateRatio.value;
 
         List<FrameIntervalModel> frameIntervals = new();
 
