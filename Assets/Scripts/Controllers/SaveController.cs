@@ -1,13 +1,13 @@
 ﻿using System;
 
-public class SaveController<T> where T : class
+public class SaveController<T> where T : class, new()
 {
     private T _data;
     private string _dirPath, _fileName, _encryptionCodeWord;
     private JsonFileHandler _fileHandler = new();
 
-    internal Action<T> onDataLoaded;
-    internal RefAction<T> onDataSaved;
+    internal Action<T> onLoad;
+    internal RefAction<T> onSave;
     
     public SaveController(string dirPath, string fileName, string encryptionCodeWord = "")
     {
@@ -19,11 +19,13 @@ public class SaveController<T> where T : class
     internal void Load()
     {
         _data = _fileHandler.Load<T>(_dirPath, _fileName, _encryptionCodeWord);
-        onDataLoaded?.Invoke(_data);
+        _data ??= new();
+        onLoad?.Invoke(_data);
     }
     internal void Save()
     {
-        onDataSaved?.Invoke(ref _data);
+        _data ??= new();
+        onSave?.Invoke(ref _data);
         _fileHandler.Save(_dirPath, _fileName, _encryptionCodeWord, _data);
     }
 }

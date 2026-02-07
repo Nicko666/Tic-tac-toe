@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5c3338a4eb9e34485e9a43577fbeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectPresenter
-  _loadingDelay: 1
+  _loadingDelay: 0.5
   _animator: {fileID: 8112143974230197664}
 --- !u!1 &9023923419768528008
 GameObject:

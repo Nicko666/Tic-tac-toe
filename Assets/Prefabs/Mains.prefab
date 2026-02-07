@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b8b7d375100a040aada5b615288814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mains
+  _progressEncryptionCodeFile: {fileID: 4900000, guid: b6ea30122091cb3448c34df362b62983, type: 3}
   _mains: []
   _progressDatabase: {fileID: 11400000, guid: 93127011855e17244b4b1b93cbc23012, type: 2}
   _loadingPresenterPrefab: {fileID: 6396134178504620899, guid: 7d58ee949b96999488515dcae5d080f5, type: 3}

@@ -4,7 +4,13 @@ using UnityEngine.SceneManagement;
 
 internal class Mains : MonoBehaviour
 {
-    private const string ProgressFileName = "Progress", ProgressEncryptionCode = "", SettingsFileName = "Settings";
+    [SerializeField] private TextAsset _progressEncryptionCodeFile;
+    [SerializeField] private IMain[] _mains;
+    [SerializeField] private ProgressDatabase _progressDatabase;
+    [SerializeField] private LoadingPresenter _loadingPresenterPrefab;
+    [SerializeField] private SoundPresenter _soundPresenterPrefab;
+
+    private const string ProgressFileName = "Progress", SettingsFileName = "Settings";
 
     private SettingsController _settingsController = new();
     private PlayersController _playersController = new();
@@ -12,11 +18,6 @@ internal class Mains : MonoBehaviour
     private DisplayDatabaseController _displayDatabaseController = new();
     private SaveController<SettingsData> _settingsDataController;
     private SaveController<ProgressData> _progressDataController;
-
-    [SerializeField] private IMain[] _mains;
-    [SerializeField] private ProgressDatabase _progressDatabase;
-    [SerializeField] private LoadingPresenter _loadingPresenterPrefab;
-    [SerializeField] private SoundPresenter _soundPresenterPrefab;
 
     private static LoadingPresenter LoadingPresenter;
     private static SoundPresenter SoundPresenter;
@@ -26,14 +27,14 @@ internal class Mains : MonoBehaviour
         DontDestroyOnLoad(LoadingPresenter ??= Instantiate(_loadingPresenterPrefab));
         DontDestroyOnLoad(SoundPresenter ??= Instantiate(_soundPresenterPrefab));
 
-        _progressDataController = new(Application.persistentDataPath, ProgressFileName, ProgressEncryptionCode);
+        _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile? _progressEncryptionCodeFile.text : "");
         _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
 
-        _progressDataController.onDataLoaded += OutputProgressDataLoaded;
-        _progressDataController.onDataSaved += OutputProgressDataSaved;
+        _progressDataController.onLoad += OutputProgressDataLoaded;
+        _progressDataController.onSave += OutputProgressDataSaved;
 
-        _settingsDataController.onDataLoaded += OutputSettingsDataLoaded;
-        _settingsDataController.onDataSaved += OutputSettingsDataSaved;
+        _settingsDataController.onLoad += OutputSettingsDataLoaded;
+        _settingsDataController.onSave += OutputSettingsDataSaved;
 
         Display.onDisplaysUpdated += OutputDisplayUpdated;
         SceneManager.sceneLoaded += OutputSceneLoaded;
@@ -60,11 +61,11 @@ internal class Mains : MonoBehaviour
 
     private void OnDestroy()
     {
-        _progressDataController.onDataLoaded -= OutputProgressDataLoaded;
-        _progressDataController.onDataSaved -= OutputProgressDataSaved;
+        _progressDataController.onLoad -= OutputProgressDataLoaded;
+        _progressDataController.onSave -= OutputProgressDataSaved;
 
-        _settingsDataController.onDataLoaded -= OutputSettingsDataLoaded;
-        _settingsDataController.onDataSaved -= OutputSettingsDataSaved;
+        _settingsDataController.onLoad -= OutputSettingsDataLoaded;
+        _settingsDataController.onSave -= OutputSettingsDataSaved;
 
         Display.onDisplaysUpdated -= OutputDisplayUpdated;
         SceneManager.sceneLoaded -= OutputSceneLoaded;
