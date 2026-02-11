@@ -10,19 +10,29 @@ internal class DisplayDatabaseController
 
     internal void Set()
     {
-        int screenFrameRate = (int)Screen.resolutions[^1].refreshRateRatio.value;
+        int screenFrameRate = 0;
+
+        if (Screen.resolutions.Length > 0)
+            screenFrameRate = (int)Screen.resolutions[^1].refreshRateRatio.value;
 
         List<FrameIntervalModel> frameIntervals = new();
 
-        int interval = 0;
-        do
+        if (screenFrameRate > 0)
         {
-            int framesCount = screenFrameRate / (interval + 1);
-            frameIntervals.Add(new(interval, framesCount));
-            interval++;
+            int interval = 0;
+            do
+            {
+                int framesCount = screenFrameRate / (interval + 1);
+                frameIntervals.Add(new(interval, framesCount));
+                interval++;
+            }
+            while (screenFrameRate / (interval + 1) >= MinFramesCount);
         }
-        while (screenFrameRate / (interval + 1) >= MinFramesCount);
+        else
+        {
+            frameIntervals.Add(new(0, (int)Screen.currentResolution.refreshRateRatio.value));
+        }
 
-        onChanged.Invoke(frameIntervals.ToArray());
+        onChanged?.Invoke(frameIntervals.ToArray());
     }
 }

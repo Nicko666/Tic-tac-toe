@@ -42,10 +42,16 @@ internal class GamePlayerController
                 (int x, int y)[] enemiesTiles = Array.FindAll(line.tilesIndex, i => _board.Tiles[i.x, i.y].player != _player && _board.Tiles[i.x, i.y].player != null);
 
                 if (enemiesTiles.Length < 1)
+                {
                     tilesPoints[tileIndex] += playerTiles.Length;
-                else if (playerTiles.Length < 1)
+                    tilesPoints[tileIndex] += (playerTiles.Length == line.tilesIndex.Length - 1) ? 2 : 0;
+                }
+                if (playerTiles.Length < 1 && enemiesTiles.Length > 0)
                     if (Array.TrueForAll(enemiesTiles, i => _board.Tiles[i.x, i.y].player == _board.Tiles[enemiesTiles[0].x, enemiesTiles[0].y].player))
+                    {
                         tilesPoints[tileIndex] += enemiesTiles.Length;
+                        tilesPoints[tileIndex] += (enemiesTiles.Length == line.tilesIndex.Length - 1) ? 1 : 0;
+                    }
             }
         }));
 

@@ -3,44 +3,44 @@ using UnityEngine;
 
 public class FrameIntervalController
 {
-    private FrameIntervalModel[] _frameIntervals = new FrameIntervalModel[0];
-    public FrameIntervalModel _frameInterval;
+    private FrameIntervalModel[] _database = new FrameIntervalModel[0];
+    public FrameIntervalModel _current;
 
-    internal FrameIntervalModel Get() => _frameInterval;
+    internal FrameIntervalModel Get() => _current;
 
     internal void SetDatabase(in FrameIntervalModel[] frameIntervals)
     {
-        _frameIntervals = frameIntervals;
+        _database = frameIntervals;
 
-        if (Array.Exists(_frameIntervals, i => i.Interval == _frameInterval.Interval))
-            _frameInterval = Array.Find(_frameIntervals, i => i.Interval == _frameInterval.Interval);
+        if (Array.Exists(_database, i => i.Interval == _current.Interval))
+            _current = Array.Find(_database, i => i.Interval == _current.Interval);
         else
-            _frameInterval = _frameIntervals[0];
+            _current = _database[0];
 
-        Application.targetFrameRate = _frameInterval.FramesCount;
+        Application.targetFrameRate = _current.FramesCount;
     }
 
     internal void Set(FrameIntervalModel frameInterval)
     {
-        if (Array.Exists(_frameIntervals, i => i.Interval == frameInterval.Interval))
-            _frameInterval = Array.Find(_frameIntervals, i => i.Interval == frameInterval.Interval);
+        if (Array.Exists(_database, i => i.Interval == frameInterval.Interval))
+            _current = Array.Find(_database, i => i.Interval == frameInterval.Interval);
         else
-            _frameInterval = _frameIntervals[0];
+            _current = _database[0];
 
-        Application.targetFrameRate = _frameInterval.FramesCount;
+        Application.targetFrameRate = _current.FramesCount;
     }
 
     internal void Load(int frameInterval)
     {
-        if (Array.Exists(_frameIntervals, i => i.Interval == frameInterval))
-            _frameInterval = Array.Find(_frameIntervals, i => i.Interval == frameInterval);
+        if (Array.Exists(_database, i => i.Interval == frameInterval))
+            _current = Array.Find(_database, i => i.Interval == frameInterval);
         else
-            _frameInterval = _frameIntervals[0];
+            _current = _database[0];
 
-        Application.targetFrameRate = _frameInterval.FramesCount;
+        Application.targetFrameRate = _current.FramesCount;
     }
     internal void Save(ref int frameInterval)
     {
-        frameInterval = _frameInterval.Interval;
+        frameInterval = _current.Interval;
     }
 }
