@@ -1083,8 +1083,8 @@ MonoBehaviour:
   _deleteHoover: {fileID: 8439192643871824260}
   _scrollUpHoover: {fileID: 462549624}
   _scrollDownHoover: {fileID: 280299154}
-  _scrollSensitivity: 2.5
-  _itemsSpeed: 1.5
+  _scrollSensitivity: 1080
+  _itemsSpeed: 2160
 --- !u!114 &459988126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2177,14 +2177,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4495008802781898037, guid: 18078a315a21ac0489fb15160ae8495f, type: 3}
-      propertyPath: m_ShowToolkit
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495008802781898037, guid: 18078a315a21ac0489fb15160ae8495f, type: 3}
-      propertyPath: m_ShowCustomSorter
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5752137745325996344, guid: 18078a315a21ac0489fb15160ae8495f, type: 3}
       propertyPath: m_Name
       value: Camera
@@ -2983,6 +2975,14 @@ PrefabInstance:
     - target: {fileID: 4117328655351482134, guid: 10be4559db24598468b9a6dc0f09eab4, type: 3}
       propertyPath: m_Name
       value: Canvas (Screen)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8543493151892363186, guid: 10be4559db24598468b9a6dc0f09eab4, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8543493151892363186, guid: 10be4559db24598468b9a6dc0f09eab4, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5392,7 +5392,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000045776367}
+  m_AnchoredPosition: {x: 0, y: -0.000052928925}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &3825304035322726712

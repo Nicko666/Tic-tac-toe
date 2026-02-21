@@ -20,6 +20,8 @@ internal class GamePlayersPresenter : MonoBehaviour
 
     internal void OutputGamePlayers(GamePlayersModel gamePlayers)
     {
+        Array.Sort(gamePlayers.gamePlayers, (x,y) => x.points > y.points ? -1 : 1);
+
         while (_gamePlayers.Count > gamePlayers.gamePlayers.Length)
             _gamePlayers.RemoveAt(_gamePlayers.Count - 1);
         while (_gamePlayers.Count < gamePlayers.gamePlayers.Length)

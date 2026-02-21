@@ -87,8 +87,8 @@ internal class PlayersListPresenter : MonoBehaviour
 
             while (item.transform.localPosition != Vector3.zero && _itemsSpeed > 0)
             {
-                item.transform.localPosition = Vector2.MoveTowards(item.transform.localPosition, Vector3.zero, _itemsSpeed / Time.deltaTime);
                 yield return null;
+                item.transform.localPosition = Vector2.MoveTowards(item.transform.localPosition, Vector3.zero, _itemsSpeed * Time.deltaTime);
             }
 
             item.transform.localPosition = Vector3.zero;
@@ -129,9 +129,11 @@ internal class PlayersListPresenter : MonoBehaviour
     }
 
     private void InputScrollUp() =>
-        _scrollRect.verticalNormalizedPosition += _scrollSensitivity / _scrollRect.content.rect.height;
+        //_scrollRect.content.position += Vector3.up * _scrollSensitivity * Time.deltaTime;
+        _scrollRect.verticalNormalizedPosition += (_scrollSensitivity / _scrollRect.content.rect.height) * Time.deltaTime;
     private void InputScrollDown() =>
-        _scrollRect.verticalNormalizedPosition -= _scrollSensitivity / _scrollRect.content.rect.height;
+        //_scrollRect.content.position -= Vector3.up * _scrollSensitivity * Time.deltaTime;
+        _scrollRect.verticalNormalizedPosition -= (_scrollSensitivity / _scrollRect.content.rect.height) * Time.deltaTime;
 
     private void InputRemoveItemHoover(bool value) =>
         _removingItem = value ? _draggingItem : null;

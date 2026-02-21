@@ -28,6 +28,10 @@ internal class Mains : MonoBehaviour
         DontDestroyOnLoad(SoundPresenter ??= Instantiate(_soundPresenterPrefab));
 
         _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile? _progressEncryptionCodeFile.text : "");
+
+        if (!_progressEncryptionCodeFile)
+            Debug.Log("Add EncryptionCodeFile before build");
+
         _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
 
         _progressDataController.onLoad += OutputProgressDataLoaded;

@@ -44,13 +44,13 @@ internal class GamePlayerController
                 if (enemiesTiles.Length < 1)
                 {
                     tilesPoints[tileIndex] += playerTiles.Length;
-                    tilesPoints[tileIndex] += (playerTiles.Length == line.tilesIndex.Length - 1) ? 2 : 0;
+                    tilesPoints[tileIndex] += (playerTiles.Length == line.tilesIndex.Length - 1) ? 3 : 0;
                 }
                 if (playerTiles.Length < 1 && enemiesTiles.Length > 0)
                     if (Array.TrueForAll(enemiesTiles, i => _board.Tiles[i.x, i.y].player == _board.Tiles[enemiesTiles[0].x, enemiesTiles[0].y].player))
                     {
                         tilesPoints[tileIndex] += enemiesTiles.Length;
-                        tilesPoints[tileIndex] += (enemiesTiles.Length == line.tilesIndex.Length - 1) ? 1 : 0;
+                        tilesPoints[tileIndex] += (enemiesTiles.Length == line.tilesIndex.Length - 1) ? 2 : 0;
                     }
             }
         }));
@@ -68,6 +68,5 @@ internal class GamePlayerController
         (int x, int y) tileIndex = tiles[_random.Next(tiles.Count)];
         
         onInputTile.Invoke(new Vector2Int(tileIndex.x, tileIndex.y), _player);
-
     }
 }
