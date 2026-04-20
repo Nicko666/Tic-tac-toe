@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class BoardPresenter : MonoBehaviour
 {
@@ -33,7 +32,7 @@ public class BoardPresenter : MonoBehaviour
             yield return new WaitForSeconds(duration);
             _tilesPresenter.OutputTiles(board.Tiles, board.Lines);
 
-            _animator.SetBool(WinnerBool, board.Winner == null);
+            _animator.SetBool(WinnerBool, board.IsInteractable);
 
             _isInteractable = true;
 

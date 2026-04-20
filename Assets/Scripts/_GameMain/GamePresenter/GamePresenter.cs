@@ -10,6 +10,8 @@ public class GamePresenter : MonoBehaviour
     [SerializeField] private GamePlayersPresenter _gamePlayers;
     [SerializeField] private SettingsPresenter _settings;
     [SerializeField] private float _actionTime;
+    private bool _isInteractable;
+
     public event Action<SoundModel> onInputSound
     {
         add
@@ -39,8 +41,16 @@ public class GamePresenter : MonoBehaviour
     }
     public event Action onInputClearBoard
     {
-        add => _board.onInputClearBoard += value;
-        remove => _board.onInputClearBoard -= value;
+        add
+        {
+            _board.onInputClearBoard += value;
+            _status.onInputClearBoard += value;
+        }
+        remove
+        {
+            _board.onInputClearBoard -= value;
+            _status.onInputClearBoard -= value;
+        }
     }
     public event Action<SceneModel> onInputScene
     {
@@ -53,8 +63,12 @@ public class GamePresenter : MonoBehaviour
     public void OutputSettings(SettingsOutputModel settings) =>
         _settings.OutputSettings(settings);
 
-    public void OutputBoard(GameBoardModel gameBoard) =>
+    public void OutputBoard(GameBoardModel gameBoard)
+    {
+        _isInteractable = gameBoard.IsInteractable;
+        _status.OutputBoard(gameBoard);
         _board.OutputBoard(gameBoard);
+    }
 
     public void OutputPlayers(GamePlayersModel gamePlayers) =>
         StartCoroutine(OutputPlayersRoutine(gamePlayers));
@@ -68,7 +82,6 @@ public class GamePresenter : MonoBehaviour
         if (gamePlayers.winner != null)
             _panelsController.InputPanel(PanelModel.Players);
     }
-
 
     private void Awake()
     {

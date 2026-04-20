@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -7,6 +8,8 @@ internal class TilesPresenter : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private Tilemap _playersTilemap;
     [SerializeField] private TileBase _playerTile;
+    //[SerializeField] private TilePresenter _tilePrefab;
+    //[SerializeField] private TilePresenter[,] _tiles;
     [SerializeField] private Tilemap _borderTilemsp;
     [SerializeField] private TileBase _borderTile;
 

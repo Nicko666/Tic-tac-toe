@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Panel Fade
+  m_Controller: {fileID: 9100000, guid: 2530cfe093eff7a47a4ceb1f2034792b, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 75e9e010b3c101c45b601a6bfb08c29a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 939f1fb70bc79864eb7e4c47abe77ad3, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 050455fdb6c245d4db3eaab30af17f7b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 185c5be03dffa4942b7533ad463b1453, type: 2}
