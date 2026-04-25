@@ -10,8 +10,6 @@ internal class PlayersController
     private LogicModel[] _logics;
     private MarkModel[] _marks;
 
-    internal Action<PlayerModel[]> onPlayersChanged;
-
     internal void SetDatabase(int minPlayersCount, LogicModel[] logics, MarkModel[] marks)
     {
         _minPlayersCount = minPlayersCount;
@@ -19,21 +17,7 @@ internal class PlayersController
         _marks = marks;
         _playerPool = new(logics, marks);
     }
-
-    internal void SetPlayers(PlayerModel[] players)
-    {
-        _players.Clear();
-        _players.AddRange(players);
-
-        _players.ForEach(player => _playerPool.GetPlayer(ref player));
-
-        while (_players.Count < _minPlayersCount)
-            _players.Add(_playerPool.GetPlayer());
-
-        onPlayersChanged.Invoke(_players.ToArray());
-    }
-
-    public void SetPlayersData(PlayerData[] playersData)
+    public PlayerModel[] Get(PlayerData[] playersData)
     {
         PlayerModel[] players = Array.ConvertAll(playersData, playerData =>
         {
@@ -53,9 +37,20 @@ internal class PlayersController
         while (_players.Count < _minPlayersCount)
             _players.Add(_playerPool.GetPlayer());
 
-        onPlayersChanged.Invoke(_players.ToArray());
+        return _players.ToArray();
     }
-
+    internal void GetData(ref PlayerData[] data, PlayerModel[] players)
+    {
+        data = Array.ConvertAll(players, player =>
+        {
+            PlayerData playerData = new();
+            if (player.logic != null) playerData.logicID = player.logic.ID;
+            if (player.mark != null) playerData.markID = player.mark.ID;
+            playerData.hue = player.hue;
+            playerData.saturation = player.saturation;
+            return playerData;
+        });
+    }
     class PlayerPool
     {
         private Random _random = new Random();

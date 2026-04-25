@@ -7,19 +7,16 @@ public class MenuRulesController
     public Action onInputSaveProgress;
     public Action<RulesModel> onChanged;
 
-    public void GetRules(ref RulesModel rules)
-    {
-        rules = _rules;
-    }
-
-    public void SetRules(RulesModel rules)
+    public void LoadRules(RulesModel rules)
     {
         _rules.levels = rules.levels;
         _rules.board = rules.board;
 
         onChanged.Invoke(_rules);
     }
-
+    public void SaveRules(ref RulesModel rules) =>
+        rules = _rules;
+    
     public void SetRulesSettings(RulesSettingsModel rulesSettings)
     {
         _rules.levels = rulesSettings.level;

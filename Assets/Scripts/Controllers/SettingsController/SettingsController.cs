@@ -2,15 +2,15 @@
 
 internal class SettingsController
 {
+    private SettingsOutputModel _settingsOutput;
     private FrameIntervalController _frameIntervalController = new();
     private VolumeController _volumeController = new();
+    private SettingsDatabaseController _displayDatabaseController = new();
 
-    private SettingsOutputModel _settingsOutput;
-    
     internal Action<SettingsOutputModel> onSettingsChanged;
     internal Action onInputSaveSettings;
 
-    internal void LoadSettingsData(SettingsData data)
+    internal void SetData(SettingsData data)
     {
         _volumeController.Load(data.volume);
         _settingsOutput.volume = _volumeController.Get();
@@ -20,13 +20,15 @@ internal class SettingsController
 
         onSettingsChanged.Invoke(_settingsOutput);
     }
-    internal void SaveSettingsData(ref SettingsData data)
+    internal void GetData(ref SettingsData data)
     {
+
+
         _volumeController.Save(ref data.volume);
         _frameIntervalController.Save(ref data.frameInterval);
     }
 
-    internal void SetDisplayDatabase(in FrameIntervalModel[] frameIntervals)
+    internal void OutputSettingsDatabase(in FrameIntervalModel[] frameIntervals)
     {
         _frameIntervalController.SetDatabase(frameIntervals);
         _settingsOutput.frameInteravl = _frameIntervalController.Get();

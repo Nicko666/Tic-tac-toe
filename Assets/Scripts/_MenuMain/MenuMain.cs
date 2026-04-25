@@ -43,42 +43,22 @@ internal class MenuMain : IMain
         _menuPresenter.OutputProgressDatabase(database.Marks, database.Logics, database.Boards, database.Levels);
     }
 
-    internal override void OutputFrameIntervals(FrameIntervalModel[] frameIntervals) =>
+    internal override void OutputSettingsDatabase(FrameIntervalModel[] frameIntervals) =>
         _menuPresenter.OutputFrameIntervals(frameIntervals);
-
-    internal override void OutputPlayers(PlayerModel[] players) =>
-        _playersController.SetPlayers(players);
-
-    internal override void OutputRules(RulesModel rules) =>
-        _rulesController.SetRules(rules);
-        
+   
     internal override void OutputSettings(SettingsOutputModel settings) =>
         _menuPresenter.OutputSettings(settings);
 
-    internal override void OutputLoadedProgressData(ProgressData data)
+    internal override void LoadProgress(ProgressModel progress)
     {
-        
+        _playersController.LoadPlayers(progress.players);
+        _rulesController.LoadRules(progress.rules);
     }
 
-    internal override void OutputSavedProgressData(ref ProgressData data)
+    internal override void SaveProgress(ref ProgressModel progress)
     {
-
-        RulesModel rules = new();
-        _rulesController.GetRules(ref rules);
-        if (rules.levels != null) data.levelsID = rules.levels.ID;
-        if (rules.board != null) data.boardID = rules.board.ID;
-        
-        PlayerModel[] players = new PlayerModel[0];
-        _playersController.GetPlayers(ref players);
-        data.playersData = Array.ConvertAll(players, player =>
-        {
-            PlayerData playerData = new();
-            if (player.logic != null) playerData.logicID = player.logic.ID;
-            if (player.mark != null) playerData.markID = player.mark.ID;
-            playerData.hue = player.hue;
-            playerData.saturation = player.saturation;
-            return playerData;
-        });
+        _playersController.SavePlayers(ref progress.players);
+        _rulesController.SaveRules(ref progress.rules);
     }
 
     private void Awake()

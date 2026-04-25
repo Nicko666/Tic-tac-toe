@@ -9,10 +9,8 @@ internal abstract class IMain : MonoBehaviour
     internal abstract event Action onInputSaveProgress;
 
     internal abstract void OutputProgressDatabase(ProgressDatabase database);
-    internal abstract void OutputFrameIntervals(FrameIntervalModel[] frameIntervals);
-    internal abstract void OutputLoadedProgressData(ProgressData data);
-    internal abstract void OutputSavedProgressData(ref ProgressData data);
-    internal abstract void OutputPlayers(PlayerModel[] players);
-    internal abstract void OutputRules(RulesModel rules);
+    internal abstract void OutputSettingsDatabase(FrameIntervalModel[] frameIntervals);
+    internal abstract void LoadProgress(ProgressModel data);
+    internal abstract void SaveProgress(ref ProgressModel data);
     internal abstract void OutputSettings(SettingsOutputModel model);
 }

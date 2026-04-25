@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class DisplayDatabaseController
+internal class SettingsDatabaseController
 {
     private const int MinFramesCount = 30;
 
     internal Action<FrameIntervalModel[]> onChanged;
 
-    internal void Set()
+    internal void Update()
     {
         int screenFrameRate = 0;
 
@@ -33,6 +33,6 @@ internal class DisplayDatabaseController
             frameIntervals.Add(new(0, (int)Screen.currentResolution.refreshRateRatio.value));
         }
 
-        onChanged?.Invoke(frameIntervals.ToArray());
+        onChanged.Invoke(frameIntervals.ToArray());
     }
 }

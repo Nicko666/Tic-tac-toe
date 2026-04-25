@@ -5,22 +5,25 @@ using UnityEngine.SceneManagement;
 internal class Mains : MonoBehaviour
 {
     [SerializeField] private TextAsset _progressEncryptionCodeFile;
-    [SerializeField] private IMain[] _mains;
     [SerializeField] private ProgressDatabase _progressDatabase;
     [SerializeField] private LoadingPresenter _loadingPresenterPrefab;
     [SerializeField] private SoundPresenter _soundPresenterPrefab;
+    [SerializeField] private IMain _main;
 
     private const string ProgressFileName = "Progress", SettingsFileName = "Settings";
 
-    private SettingsController _settingsController = new();
-    private PlayersController _playersController = new();
-    private RulesController _rulesController = new();
-    private DisplayDatabaseController _displayDatabaseController = new();
+    private SettingsDatabaseController _settingsDatabaseController = new();
     private SaveController<SettingsData> _settingsDataController;
+    private SettingsController _settingsController = new();
     private SaveController<ProgressData> _progressDataController;
+    private ProgressController _progressController = new();
 
     private static LoadingPresenter LoadingPresenter;
     private static SoundPresenter SoundPresenter;
+
+    private ProgressData _progressData;
+    private ProgressModel _progress = new();
+    private SettingsData _settingsData;
 
     private void Awake()
     {
@@ -28,117 +31,81 @@ internal class Mains : MonoBehaviour
         DontDestroyOnLoad(SoundPresenter ??= Instantiate(_soundPresenterPrefab));
 
         _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile? _progressEncryptionCodeFile.text : "");
-
-        if (!_progressEncryptionCodeFile)
-            Debug.Log("Add EncryptionCodeFile before build");
-
+        if (!_progressEncryptionCodeFile) Debug.Log("Add EncryptionCodeFile before build");
         _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
 
-        _progressDataController.onLoad += OutputProgressDataLoaded;
-        _progressDataController.onSave += OutputProgressDataSaved;
-
-        _settingsDataController.onLoad += OutputSettingsDataLoaded;
-        _settingsDataController.onSave += OutputSettingsDataSaved;
-
-        Display.onDisplaysUpdated += OutputDisplayUpdated;
-        SceneManager.sceneLoaded += OutputSceneLoaded;
-        _displayDatabaseController.onChanged += OutputDisplayDatabase;
+        SceneManager.sceneLoaded += Load;
+        Display.onDisplaysUpdated += _settingsDatabaseController.Update;
+        _settingsDatabaseController.onChanged += OutputSettingsDatabase;
         _settingsController.onSettingsChanged += OutputSettings;
-        _settingsController.onInputSaveSettings += _settingsDataController.Save;
-        _rulesController.onRulesChanged += OutputRules;
-        _playersController.onPlayersChanged += OutputPlayers;
+        _settingsController.onInputSaveSettings += SaveSettings;
 
-        _displayDatabaseController.Set();
-        _rulesController.SetDatabase(_progressDatabase.Levels, _progressDatabase.Boards);
-        _playersController.SetDatabase(_progressDatabase.MinPlayersCount, _progressDatabase.Logics, _progressDatabase.Marks);
-
-        Array.ForEach(_mains, main =>
-        {
-            main.onInputSound += SoundPresenter.OutputSound;
-            main.onInputScene += InputGameScene;
-            main.onInputSettings += _settingsController.SetSettings;
-            main.onInputSaveProgress += _progressDataController.Save;
-
-            main.OutputProgressDatabase(_progressDatabase);
-        });
+        _main.onInputSound += SoundPresenter.OutputSound;
+        _main.onInputScene += InputGameScene;
+        _main.onInputSettings += _settingsController.SetSettings;
+        _main.onInputSaveProgress += SaveProgress;
     }
 
     private void OnDestroy()
     {
-        _progressDataController.onLoad -= OutputProgressDataLoaded;
-        _progressDataController.onSave -= OutputProgressDataSaved;
-
-        _settingsDataController.onLoad -= OutputSettingsDataLoaded;
-        _settingsDataController.onSave -= OutputSettingsDataSaved;
-
-        Display.onDisplaysUpdated -= OutputDisplayUpdated;
-        SceneManager.sceneLoaded -= OutputSceneLoaded;
-        _displayDatabaseController.onChanged -= OutputDisplayDatabase;
+        SceneManager.sceneLoaded -= Load;
+        Display.onDisplaysUpdated -= _settingsDatabaseController.Update;
+        _settingsDatabaseController.onChanged -= OutputSettingsDatabase;
         _settingsController.onSettingsChanged -= OutputSettings;
-        _settingsController.onInputSaveSettings -= _settingsDataController.Save;
-        _rulesController.onRulesChanged -= OutputRules;
-        _playersController.onPlayersChanged -= OutputPlayers;
+        _settingsController.onInputSaveSettings -= SaveSettings;
 
-        Array.ForEach(_mains, main =>
-        {
-            main.onInputSound -= SoundPresenter.OutputSound;
-            main.onInputScene -= InputGameScene;
-            main.onInputSettings -= _settingsController.SetSettings;
-            main.onInputSaveProgress -= _progressDataController.Save;
-        });
+        _main.onInputSound -= SoundPresenter.OutputSound;
+        _main.onInputScene -= InputGameScene;
+        _main.onInputSettings -= _settingsController.SetSettings;
+        _main.onInputSaveProgress -= SaveProgress;
     }
     private void OnApplicationFocus(bool focus)
     {
         if (focus)
-            _displayDatabaseController.Set();
+        {
+            _settingsDatabaseController.Update();
+            _settingsData = _settingsDataController.Load();
+            _settingsController.SetData(_settingsData);
+        }
     }
-
-    private void OutputDisplayUpdated() =>
-        _displayDatabaseController.Set();
-
-    private void OutputDisplayDatabase(FrameIntervalModel[] frameIntervals)
+    
+    private void OutputSettingsDatabase(FrameIntervalModel[] frameIntervals)
     {
-        Array.ForEach(_mains, main => main.OutputFrameIntervals(frameIntervals));
-        _settingsController.SetDisplayDatabase(frameIntervals);
+        _main.OutputSettingsDatabase(frameIntervals);
+        _settingsController.OutputSettingsDatabase(frameIntervals);
     }
 
-    private void OutputPlayers(PlayerModel[] players) =>
-        Array.ForEach(_mains, main => main.OutputPlayers(players));
-    private void OutputRules(RulesModel rules) =>
-        Array.ForEach(_mains, main => main.OutputRules(rules));
     private void OutputSettings(SettingsOutputModel settings)
     {
         SoundPresenter.OutputSettings(settings.volume);
-        Array.ForEach(_mains, main => main.OutputSettings(settings));
+        _main.OutputSettings(settings);
     }
 
     private void InputGameScene(SceneModel sceneModel) =>
         LoadingPresenter.OutputGameScene(sceneModel);
 
-    private void OutputSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    private void Load(Scene scene, LoadSceneMode loadSceneMode)
     {
-        _settingsDataController.Load();
-        _progressDataController.Load();
+        _settingsDatabaseController.Update();
+        _settingsData = _settingsDataController.Load();
+        _settingsController.SetData(_settingsData);
+
+        _progressController.SetDatabase(_progressDatabase);
+        _main.OutputProgressDatabase(_progressDatabase);
+        _progressData = _progressDataController.Load();
+        _progressController.GetProgress(ref _progress, _progressData);
+        _main.LoadProgress(_progress);
     }
 
-    private void OutputSettingsDataLoaded(SettingsData data)
+    private void SaveSettings()
     {
-        _settingsController.LoadSettingsData(data);
+        _settingsController.GetData(ref _settingsData);
+        _settingsDataController.Save(_settingsData);
     }
-    private void OutputSettingsDataSaved(ref SettingsData data)
+    private void SaveProgress()
     {
-        _settingsController.SaveSettingsData(ref data);
-    }
-
-    private void OutputProgressDataLoaded(ProgressData data)
-    {
-        _rulesController.SetRulesData(data.levelsID, data.boardID);
-        _playersController.SetPlayersData(data.playersData);
-
-        foreach (var i in _mains) i.OutputLoadedProgressData(data);
-    }
-    private void OutputProgressDataSaved(ref ProgressData data)
-    {
-        foreach (var i in _mains) i.OutputSavedProgressData(ref data);
+        _main.SaveProgress(ref _progress);
+        _progressController.GetData(ref _progressData, _progress);
+        _progressDataController.Save(_progressData);
     }
 }

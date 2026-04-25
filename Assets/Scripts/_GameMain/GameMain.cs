@@ -23,23 +23,19 @@ internal class GameMain : IMain
         remove => _gamePresenter.onInputScene -= value;
     }
 
-    internal override void OutputPlayers(PlayerModel[] players) =>
-       _gameController.LoadPlayers(players);
+    internal override void OutputSettingsDatabase(FrameIntervalModel[] frameIntervals) =>
+        _gamePresenter.OutputFrameIntervals(frameIntervals);
+    internal override void OutputProgressDatabase(ProgressDatabase database) { }
 
-    internal override void OutputRules(RulesModel rules) =>
-        _gameController.LoadRules(rules);
+    internal override void LoadProgress(ProgressModel progress)
+    {
+       _gameController.LoadPlayers(progress.players);
+       _gameController.LoadRules(progress.rules);    
+    }
+    internal override void SaveProgress(ref ProgressModel data) { }
 
     internal override void OutputSettings(SettingsOutputModel settings) =>
         _gamePresenter.OutputSettings(settings);
-
-    internal override void OutputProgressDatabase(ProgressDatabase database) { }
-
-    internal override void OutputLoadedProgressData(ProgressData data) { }
-
-    internal override void OutputFrameIntervals(FrameIntervalModel[] frameIntervals) =>
-        _gamePresenter.OutputFrameIntervals(frameIntervals);
-
-    internal override void OutputSavedProgressData(ref ProgressData data) { }
 
     private void Awake()
     {

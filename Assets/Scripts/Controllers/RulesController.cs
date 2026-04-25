@@ -28,12 +28,11 @@ internal class RulesController
         onRulesChanged.Invoke(_rules);
     }
 
-    internal void SetRulesData(int levelsID, int boardID)
+    internal RulesModel Get(int levelsID, int boardID)
     {
         _rules.levels = Array.Find(_levels, i => i.ID == levelsID);
         _rules.board = Array.Find(_boards, i => i.ID == boardID);
-        
-        onRulesChanged.Invoke(_rules);
+        return _rules;
     }
 
     internal void SetRulesSettings(RulesSettingsModel rulesSettings)
@@ -43,5 +42,11 @@ internal class RulesController
 
         onRulesChanged.Invoke(_rules);
         onInputSaveProgress.Invoke();
+    }
+
+    internal void GetData(ref int levelsID, int boardID, RulesModel rules)
+    {
+        if (rules.levels != null) levelsID = rules.levels.ID;
+        if (rules.board != null) boardID = rules.board.ID;
     }
 }

@@ -17,7 +17,7 @@ public class MenuPlayersController
         _playerPool = new(defaultLogics, defaultMarks);
     }
 
-    public void SetPlayers(PlayerModel[] players)
+    public void LoadPlayers(PlayerModel[] players)
     {
         _players.Clear();
         _players.AddRange(players);
@@ -29,8 +29,8 @@ public class MenuPlayersController
 
         onChanged.Invoke(_players.ToArray());
     }
-    public void GetPlayers(ref PlayerModel[] playersModel) =>
-        playersModel = _players.ToArray();
+    public void SavePlayers(ref PlayerModel[] players) =>
+        players = _players.ToArray();
 
     public void AddPlayer()
     {
