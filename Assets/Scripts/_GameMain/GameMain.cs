@@ -29,8 +29,7 @@ internal class GameMain : IMain
 
     internal override void LoadProgress(ProgressModel progress)
     {
-       _gameController.LoadPlayers(progress.players);
-       _gameController.LoadRules(progress.rules);    
+       _gameController.LoadProgress(progress);
     }
     internal override void SaveProgress(ref ProgressModel data) { }
 

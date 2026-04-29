@@ -4,9 +4,10 @@ using UnityEngine;
 [Serializable]
 internal class MenuMain : IMain
 {
+    [SerializeField] private MenuPresenter _menuPresenter;
+
     private MenuPlayersController _playersController = new();
     private MenuRulesController _rulesController = new();
-    [SerializeField] private MenuPresenter _menuPresenter;
 
     internal override event Action<SoundModel> onInputSound
     {

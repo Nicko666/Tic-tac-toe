@@ -17,6 +17,6 @@ internal class ProgressController
     public void GetData(ref ProgressData data, ProgressModel progress)
     {
         _playersController.GetData(ref data.playersData, progress.players);
-        _rulesController.GetData(ref data.levelsID, data.boardID, progress.rules);
+        _rulesController.GetData(ref data.levelsID, ref data.boardID, progress.rules);
     }
 }

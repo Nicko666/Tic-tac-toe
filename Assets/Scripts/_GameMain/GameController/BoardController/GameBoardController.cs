@@ -3,7 +3,6 @@ using UnityEngine;
 
 internal class GameBoardController
 {
-    private System.Random _random = new();
     private TilesController _tilesController = new();
     private LineController _lineController = new();
     private WinnerController _winnerController = new();
@@ -16,7 +15,7 @@ internal class GameBoardController
         _tilesController.Load(tilesSqCount);
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.Set(tiles);
+        _lineController.SetShort(tiles);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);
@@ -33,7 +32,7 @@ internal class GameBoardController
         _tilesController.ClearTiles();
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.Set(tiles);
+        _lineController.SetShort(tiles);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);
@@ -50,7 +49,7 @@ internal class GameBoardController
         _tilesController.FillTile(new(index.x, index.y), player);
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.Set(tiles);
+        _lineController.SetShort(tiles);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);

@@ -6,15 +6,11 @@ public class GamePlayersController
     private GamePlayersModel _gamePlayers = new(new GamePlayerModel[0]);
 
     internal Action<GamePlayersModel> onChanged;
-    
-    internal void LoadMaxPoints(int points)
-    {
-        _maxPoints = points;
-    }
 
-    internal void LoadPlayers(PlayerModel[] players)
+    internal void LoadProgress(ProgressModel progress)
     {
-        _gamePlayers.gamePlayers = Array.ConvertAll(players, player => new GamePlayerModel(player));
+        _maxPoints = progress.rules.levels.Points;
+        _gamePlayers.gamePlayers = Array.ConvertAll(progress.players, player => new GamePlayerModel(player));
 
         onChanged?.Invoke(_gamePlayers);
     }

@@ -44,7 +44,7 @@ internal class RulesController
         onInputSaveProgress.Invoke();
     }
 
-    internal void GetData(ref int levelsID, int boardID, RulesModel rules)
+    internal void GetData(ref int levelsID, ref int boardID, RulesModel rules)
     {
         if (rules.levels != null) levelsID = rules.levels.ID;
         if (rules.board != null) boardID = rules.board.ID;

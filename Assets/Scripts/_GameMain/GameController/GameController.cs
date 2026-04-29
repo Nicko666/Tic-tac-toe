@@ -20,15 +20,10 @@ public class GameController
         _boardController.onChanged += OutputBoardChanged;
     }
 
-    public void LoadRules(in RulesModel rules)
+    public void LoadProgress(in ProgressModel progress)
     {
-        _playersController.LoadMaxPoints(rules.levels.Points);
-        _boardController.Load(rules.board.SquereTilesCount);
-    }
-
-    public void LoadPlayers(in PlayerModel[] players)
-    {
-        _playersController.LoadPlayers(players);
+        _playersController.LoadProgress(progress);
+        _boardController.Load(progress.rules.board.SquereTilesCount);
     }
 
     public void InputRestart()
