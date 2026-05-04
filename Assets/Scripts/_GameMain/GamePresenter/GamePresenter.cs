@@ -10,7 +10,6 @@ public class GamePresenter : MonoBehaviour
     [SerializeField] private GamePlayersPresenter _gamePlayers;
     [SerializeField] private SettingsPresenter _settings;
     [SerializeField] private float _actionTime;
-    private bool _isInteractable;
 
     public event Action<SoundModel> onInputSound
     {
@@ -65,22 +64,30 @@ public class GamePresenter : MonoBehaviour
 
     public void OutputBoard(GameBoardModel gameBoard)
     {
-        _isInteractable = gameBoard.IsInteractable;
         _status.OutputBoard(gameBoard);
         _board.OutputBoard(gameBoard);
     }
 
-    public void OutputPlayers(GamePlayersModel gamePlayers) =>
+    public void OutputPlayers(GamePlayersModel gamePlayers)
+    {
         StartCoroutine(OutputPlayersRoutine(gamePlayers));
 
-    private IEnumerator OutputPlayersRoutine(GamePlayersModel gamePlayers)
+        IEnumerator OutputPlayersRoutine(GamePlayersModel gamePlayers)
+        {
+            _gamePlayers.OutputGamePlayers(gamePlayers);
+
+            yield return new WaitForSeconds(_actionTime);
+
+            if (gamePlayers.winner != null)
+                _panelsController.InputPanel(PanelModel.Players);
+        }
+    }
+
+    public void OutputPlayersQueue(GamePlayerModel[] gamePlayers)
     {
-        _gamePlayers.OutputGamePlayers(gamePlayers);
-
-        yield return new WaitForSeconds(_actionTime);
-
-        if (gamePlayers.winner != null)
-            _panelsController.InputPanel(PanelModel.Players);
+        bool isComputer = gamePlayers[0].player.logic.Logic != LogicModel.LogicType.Player;
+        _board.OutputDelay(isComputer ? _actionTime : 0);
+        _status.OutputPlayer(gamePlayers[0], isComputer ? _actionTime : 0);
     }
 
     private void Awake()
@@ -102,18 +109,8 @@ public class GamePresenter : MonoBehaviour
         _panelsController.onInputStatus -= _status.OutputPanel;
     }
 
-    private void InputDefaultPanel()
-    {
-        _status.OutputPanel(true);
-        _settings.OutputPanel(false);
-    }
-
-    public void OutputPlayersQueue(GamePlayerModel[] gamePlayers)
-    {
-        bool isComputer = gamePlayers[0].player.logic.Logic != LogicModel.LogicType.Player;
-        _board.OutputDelay(isComputer ? _actionTime : 0); 
-        _status.OutputPlayer(gamePlayers[0], isComputer ? _actionTime : 0);
-    }
+    private void InputDefaultPanel() =>
+        _panelsController.InputPanel(PanelModel.Board);
 
     class PanelsController
     {

@@ -5,17 +5,19 @@ public class IsInteractableController
     internal bool Get() =>
         _isInteractable;
 
-    internal void Set(TileModel[,] tiles, PlayerModel winner)
+    internal void Set(PlayerModel winner, LineModel[] lines)
     {
-        bool hasEmptyTile = false;
-        
-        foreach (TileModel tile in tiles)
-            if (tile.player == null)
+        bool hasWinTile = false;
+
+        foreach (var line in lines)
+        {
+            if (line.hasWinTiles)
             {
-                hasEmptyTile = true;
+                hasWinTile = true;
                 break;
             }
+        }
 
-        _isInteractable = hasEmptyTile && winner == null;
+        _isInteractable = hasWinTile && winner == null;
     }
 }

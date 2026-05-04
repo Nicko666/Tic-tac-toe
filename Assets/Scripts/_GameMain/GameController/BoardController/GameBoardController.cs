@@ -3,6 +3,7 @@ using UnityEngine;
 
 internal class GameBoardController
 {
+    private const int LineLength = 3;
     private TilesController _tilesController = new();
     private LineController _lineController = new();
     private WinnerController _winnerController = new();
@@ -15,13 +16,13 @@ internal class GameBoardController
         _tilesController.Load(tilesSqCount);
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.SetShort(tiles);
+        _lineController.SetShort(tiles, LineLength);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);
         PlayerModel winner = _winnerController.Get();
 
-        _isInteractableController.Set(tiles, winner);
+        _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
 
         onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
@@ -32,13 +33,13 @@ internal class GameBoardController
         _tilesController.ClearTiles();
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.SetShort(tiles);
+        _lineController.SetShort(tiles, LineLength);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);
         PlayerModel winner = _winnerController.Get();
 
-        _isInteractableController.Set(tiles, winner);
+        _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
 
         onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
@@ -49,13 +50,13 @@ internal class GameBoardController
         _tilesController.FillTile(new(index.x, index.y), player);
         TileModel[,] tiles = _tilesController.Get();
 
-        _lineController.SetShort(tiles);
+        _lineController.SetShort(tiles, LineLength);
         LineModel[] lines = _lineController.Get();
 
         _winnerController.Set(lines);
         PlayerModel winner = _winnerController.Get();
 
-        _isInteractableController.Set(tiles, winner);
+        _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
 
         onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
