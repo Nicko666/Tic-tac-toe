@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-internal class GameBoardController
+﻿internal class GameBoardController
 {
     private const int LineLength = 3;
     private TilesController _tilesController = new();
@@ -9,7 +6,8 @@ internal class GameBoardController
     private WinnerController _winnerController = new();
     private IsInteractableController _isInteractableController = new();
 
-    internal Action<GameBoardModel> onChanged;
+    public GameBoardModel Get() =>
+        new GameBoardModel(_tilesController.Get(), _lineController.Get(), _winnerController.Get(), _isInteractableController.Get());
 
     public void Load(int tilesSqCount)
     {
@@ -24,8 +22,6 @@ internal class GameBoardController
 
         _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
-
-        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
     }
 
     internal void Restart()
@@ -41,13 +37,13 @@ internal class GameBoardController
 
         _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
-
-        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
     }
 
-    internal void SetTile(Vector2Int index, PlayerModel player)
+    internal bool SetTile((int x, int y) index, PlayerModel player)
     {
-        _tilesController.FillTile(new(index.x, index.y), player);
+        bool result = false;
+
+        result = _tilesController.FillTile(index, player);
         TileModel[,] tiles = _tilesController.Get();
 
         _lineController.SetShort(tiles, LineLength);
@@ -59,6 +55,6 @@ internal class GameBoardController
         _isInteractableController.Set(winner, lines);
         bool isInteractable = _isInteractableController.Get();
 
-        onChanged.Invoke(new GameBoardModel(tiles, lines, winner, isInteractable));
+        return result;
     }
 }

@@ -38,17 +38,13 @@ internal class GameMain : IMain
 
     private void Awake()
     {
-        _gameController.onBoardChanged += _gamePresenter.OutputBoard;
-        _gameController.onPlayersChanged += _gamePresenter.OutputPlayers;
-        _gameController.onPlayersQueueChanged += _gamePresenter.OutputPlayersQueue;
+        _gameController.onChanged += _gamePresenter.OutputGame;
         _gamePresenter.onInputTile += _gameController.InputTile;
         _gamePresenter.onInputClearBoard += _gameController.InputRestart;
     }
     private void OnDestroy()
     {
-        _gameController.onBoardChanged -= _gamePresenter.OutputBoard;
-        _gameController.onPlayersChanged -= _gamePresenter.OutputPlayers;
-        _gameController.onPlayersQueueChanged -= _gamePresenter.OutputPlayersQueue;
+        _gameController.onChanged += _gamePresenter.OutputGame;
         _gamePresenter.onInputTile -= _gameController.InputTile;
         _gamePresenter.onInputClearBoard -= _gameController.InputRestart;
     }

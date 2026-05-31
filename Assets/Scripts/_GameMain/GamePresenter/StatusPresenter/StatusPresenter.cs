@@ -20,9 +20,9 @@ public class StatusPresenter : MonoBehaviour
     internal void OutputPanel(bool isOpen) =>
         _panel.OutputOpen(isOpen);
 
-    internal void OutputPlayer(GamePlayerModel gamePlayerModel, float duration)
+    internal void OutputPlayer(PlayerModel player, float duration)
     {
-        _routines.Add(OutputPlayerRoutine(gamePlayerModel.player, duration));
+        _routines.Add(OutputPlayerRoutine(player, duration));
         _coroutine ??= StartCoroutine(OutputQueueCoroutine());
 
         IEnumerator OutputPlayerRoutine(PlayerModel player, float duration)

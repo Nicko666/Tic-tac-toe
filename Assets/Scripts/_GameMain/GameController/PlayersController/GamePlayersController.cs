@@ -1,30 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 
 public class GamePlayersController
 {
     private int _maxPoints;
-    private GamePlayersModel _gamePlayers = new(new GamePlayerModel[0]);
+    public List<GamePlayerModel> _gamePlayers = new();
+    public PlayerModel _winner;
 
-    internal Action<GamePlayersModel> onChanged;
-
-    internal void LoadProgress(ProgressModel progress)
+    internal void Set(int maxPoints, PlayerModel[] players)
     {
-        _maxPoints = progress.rules.levels.Points;
-        _gamePlayers.gamePlayers = Array.ConvertAll(progress.players, player => new GamePlayerModel(player));
-
-        onChanged?.Invoke(_gamePlayers);
+        _maxPoints = maxPoints;
+        _gamePlayers = new(Array.ConvertAll(players, player => new GamePlayerModel(player)));
     }
+
+    internal GamePlayersModel Get() => 
+        new GamePlayersModel() { gamePlayers = _gamePlayers.ToArray(), winner = _winner };
 
     internal void SetPoints(PlayerModel winner)
     {
-        if (!Array.Exists(_gamePlayers.gamePlayers, i => i.player == winner)) return;
+        if (!_gamePlayers.Exists(i => i.player == winner)) return;
 
-        int gamePlayerIndex = Array.FindIndex(_gamePlayers.gamePlayers, i => i.player == winner);
-        _gamePlayers.gamePlayers[gamePlayerIndex].points++;
+        int gamePlayerIndex = _gamePlayers.FindIndex(i => i.player == winner);
+        GamePlayerModel gamePlayer = _gamePlayers[gamePlayerIndex];
+        gamePlayer.points++;
+        _gamePlayers[gamePlayerIndex] = gamePlayer;
 
-        if (Array.Exists(_gamePlayers.gamePlayers, gamePlayer => gamePlayer.points >= _maxPoints))
-            _gamePlayers.winner = Array.Find(_gamePlayers.gamePlayers, gamePlayer => gamePlayer.points >= _maxPoints).player;
-
-        onChanged?.Invoke(_gamePlayers);
+        if (_gamePlayers.Exists(gamePlayer => gamePlayer.points >= _maxPoints))
+            _winner = _gamePlayers.Find(gamePlayer => gamePlayer.points >= _maxPoints).player;
     }
 }

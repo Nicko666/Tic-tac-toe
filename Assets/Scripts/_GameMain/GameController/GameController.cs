@@ -1,68 +1,121 @@
 using System;
-using UnityEngine;
 
 public class GameController
 {
-    private GamePlayersController _playersController = new();
     private GameBoardController _boardController = new();
+    private GamePlayersController _playersController = new();
     private GamePlayersQueueController _playersQueueController = new();
-    private GamePlayerController _playerController = new();
+    private GamePlayerLogicController _currentPlayerController = new();
 
-    public Action<GameBoardModel> onBoardChanged;
-    public Action<GamePlayersModel> onPlayersChanged;
-    public Action<GamePlayerModel[]> onPlayersQueueChanged;
+    public Action<GameModel> onChanged;
 
-    public GameController()
+    public void LoadProgress(ProgressModel progress)
     {
-        _playersController.onChanged += OutputPlayersChanged;
-        _playersQueueController.onChanged += OutputPlayersQueueChanged;
-        _playerController.onInputTile += OutputTile;
-        _boardController.onChanged += OutputBoardChanged;
-    }
-
-    public void LoadProgress(in ProgressModel progress)
-    {
-        _playersController.LoadProgress(progress);
         _boardController.Load(progress.rules.board.SquereTilesCount);
+        GameBoardModel board = _boardController.Get();
+        
+        _playersController.Set(progress.rules.levels.Points, progress.players);
+        GamePlayersModel players = _playersController.Get();
+        
+        _playersQueueController.Set(players.gamePlayers);
+        PlayerModel[] playersQueue = _playersQueueController.Get();
+        
+        onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
+
+
+        ///*
+        while (board.IsInteractable && playersQueue[0].logic.Logic != LogicModel.LogicType.Player)
+        {
+            PlayerModel player = playersQueue[0];
+            (int x, int y) index = _currentPlayerController.GetIndex(board, player);
+            
+            _boardController.SetTile(index, player);
+            board = _boardController.Get();
+            
+            if (board.IsInteractable)
+                _playersQueueController.SetNext();
+
+            _playersController.SetPoints(board.Winner);
+            players = _playersController.Get();
+
+            playersQueue = _playersQueueController.Get();
+
+            onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
+        }
+        //*/
     }
 
     public void InputRestart()
     {
         _boardController.Restart();
-    }
+        GameBoardModel board = _boardController.Get();
 
-    public void InputTile(Vector2Int tileIndex)
-    {
-        _playerController.InputTile(tileIndex);
-    }
-
-    private void OutputBoardChanged(GameBoardModel gameBoard)
-    {
-        onBoardChanged.Invoke(gameBoard);
+        GamePlayersModel players = _playersController.Get();
         
-        _playerController.SetBoard(gameBoard);
+        _playersQueueController.Set(players.gamePlayers);
+        PlayerModel[] playersQueue = _playersQueueController.Get();
 
-        _playersQueueController.SetNext(gameBoard);
+        onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
 
-        _playersController.SetPoints(gameBoard.Winner);
+
+        ///*
+        while (board.IsInteractable && playersQueue[0].logic.Logic != LogicModel.LogicType.Player)
+        {
+            PlayerModel player = playersQueue[0];
+            (int x, int y) index = _currentPlayerController.GetIndex(board, player);
+
+            _boardController.SetTile(index, player);
+            board = _boardController.Get();
+
+            if (board.IsInteractable)
+                _playersQueueController.SetNext();
+
+            _playersController.SetPoints(board.Winner);
+            players = _playersController.Get();
+
+            playersQueue = _playersQueueController.Get();
+
+            onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
+        }
+        //*/
     }
 
-    private void OutputPlayersChanged(GamePlayersModel gamePlayers)
+    public void InputTile((int x, int y) index)
     {
-        onPlayersChanged.Invoke(gamePlayers);
-        
-        _playersQueueController.SetDefault(gamePlayers.gamePlayers);
-    }
+        PlayerModel player = _playersQueueController.Get()[0];
 
-    private void OutputPlayersQueueChanged(GamePlayerModel[] gamePlayers)
-    {
-        onPlayersQueueChanged.Invoke(gamePlayers);
+        bool moveIsDone = _boardController.SetTile(index, player);
+        GameBoardModel board = _boardController.Get();
 
-        _playerController.SetPlayer(gamePlayers);
-    }
+        _playersController.SetPoints(board.Winner);
+        GamePlayersModel players = _playersController.Get();
 
-    private void OutputTile(Vector2Int index, PlayerModel player)
-    {
-        _boardController.SetTile(index, player);
+        if (moveIsDone && board.IsInteractable)
+            _playersQueueController.SetNext();
+        PlayerModel[] playersQueue = _playersQueueController.Get();
+
+        onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
+
+
+        ///*
+        while (board.IsInteractable && playersQueue[0].logic.Logic != LogicModel.LogicType.Player)
+        {
+            player = playersQueue[0];
+            index = _currentPlayerController.GetIndex(board, player);
+
+            _boardController.SetTile(index, player);
+            board = _boardController.Get();
+
+            if (board.IsInteractable)
+                _playersQueueController.SetNext();
+
+            _playersController.SetPoints(board.Winner);
+            players = _playersController.Get();
+
+            playersQueue = _playersQueueController.Get();
+
+            onChanged.Invoke(new GameModel { board = board, players = players, playersQueue = playersQueue });
+        }
+        //*/
     }
 }

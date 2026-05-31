@@ -28,11 +28,6 @@ public class GamePresenter : MonoBehaviour
             _settings.onInputSound -= value;
         }
     }
-    public event Action<Vector2Int> onInputTile
-    {
-        add => _board.onInputTile += value;
-        remove => _board.onInputTile -= value;
-    }
     public event Action<SettingsOutputModel> onInputSettings
     {
         add => _settings.onInputSettings += value;
@@ -56,38 +51,32 @@ public class GamePresenter : MonoBehaviour
         add => _gamePlayers.onInputScene += value;
         remove => _gamePlayers.onInputScene -= value;
     }
+    public event Action<(int x, int y)> onInputTile;
 
     public void OutputFrameIntervals(FrameIntervalModel[] frameIntervals) =>
         _settings.OutputFrameIntervals(frameIntervals);
     public void OutputSettings(SettingsOutputModel settings) =>
         _settings.OutputSettings(settings);
 
-    public void OutputBoard(GameBoardModel gameBoard)
+    public void OutputGame(GameModel game)
     {
-        _status.OutputBoard(gameBoard);
-        _board.OutputBoard(gameBoard);
-    }
+        _status.OutputBoard(game.board);
+        _board.OutputBoard(game.board);
 
-    public void OutputPlayers(GamePlayersModel gamePlayers)
-    {
-        StartCoroutine(OutputPlayersRoutine(gamePlayers));
-
+        StartCoroutine(OutputPlayersRoutine(game.players));
         IEnumerator OutputPlayersRoutine(GamePlayersModel gamePlayers)
         {
             _gamePlayers.OutputGamePlayers(gamePlayers);
 
             yield return new WaitForSeconds(_actionTime);
 
-            if (gamePlayers.winner != null)
+            if (gamePlayers.winner != null && !game.board.IsInteractable)
                 _panelsController.InputPanel(PanelModel.Players);
         }
-    }
 
-    public void OutputPlayersQueue(GamePlayerModel[] gamePlayers)
-    {
-        bool isComputer = gamePlayers[0].player.logic.Logic != LogicModel.LogicType.Player;
+        bool isComputer = game.playersQueue[0].logic.Logic != LogicModel.LogicType.Player;
         _board.OutputDelay(isComputer ? _actionTime : 0);
-        _status.OutputPlayer(gamePlayers[0], isComputer ? _actionTime : 0);
+        _status.OutputPlayer(game.playersQueue[0], isComputer ? _actionTime : 0);
     }
 
     private void Awake()
@@ -98,6 +87,7 @@ public class GamePresenter : MonoBehaviour
         _panelsController.onInputPlayers += _gamePlayers.OutputPanel;
         _panelsController.onInputSettings += _settings.OutputPanel;
         _panelsController.onInputStatus += _status.OutputPanel;
+        _board.onInputTile += InputTile;
     }
     private void OnDestroy()
     {
@@ -107,7 +97,11 @@ public class GamePresenter : MonoBehaviour
         _panelsController.onInputPlayers -= _gamePlayers.OutputPanel;
         _panelsController.onInputSettings -= _settings.OutputPanel;
         _panelsController.onInputStatus -= _status.OutputPanel;
+        _board.onInputTile -= InputTile;
     }
+
+    private void InputTile(Vector2Int index) =>
+        onInputTile.Invoke(new(index.x, index.y));
 
     private void InputDefaultPanel() =>
         _panelsController.InputPanel(PanelModel.Board);

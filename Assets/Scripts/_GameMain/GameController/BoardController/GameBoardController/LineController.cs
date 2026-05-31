@@ -72,18 +72,19 @@ internal class LineController
         for (int i = 0; i < _lines.Count; i++)
         {
             LineModel line = _lines[i];
-
+            
             if (Array.Exists(line.tilesIndex, index => tiles[index.x, index.y].player == null))
             {
-                line.hasWinTiles = true;
-                
-                if (Array.Exists(line.tilesIndex, index => tiles[index.x, index.y].player != null))
+                List<PlayerModel> players = new();
+
+                Array.ForEach(line.tilesIndex, index =>
                 {
-                    (int x, int y) player1Index = Array.Find(line.tilesIndex, index => tiles[index.x, index.y].player != null);
-                    PlayerModel player1 = tiles[player1Index.x, player1Index.y].player;
-                    if (Array.Exists(line.tilesIndex, index => tiles[index.x, index.y].player != player1 && tiles[index.x, index.y].player != null))
-                        line.hasWinTiles = false;
-                }
+                    PlayerModel player = tiles[index.x, index.y].player;
+                    if (player != null && !players.Contains(player))
+                        players.Add(player);
+                });
+
+                line.hasWinTiles = players.Count < 2;
             }
             else
                 line.hasWinTiles = false;
