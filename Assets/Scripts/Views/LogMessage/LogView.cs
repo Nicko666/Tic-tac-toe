@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LogView : MonoBehaviour
+internal class LogView : MonoBehaviour
 {
     [SerializeField] private Button _openButton, _closeButton;
     [SerializeField] private GameObject _openPanel, _closePanel;
@@ -18,7 +18,6 @@ public class LogView : MonoBehaviour
     private void Awake()
     {
         Application.logMessageReceived += OutputLog;
-
         _panelsController.onChanged += OutputPanel;
         _openButton.onClick.AddListener(_panelsController.SetOpen);
         _closeButton.onClick.AddListener(_panelsController.SetClose);
@@ -26,6 +25,7 @@ public class LogView : MonoBehaviour
 
     private void OnDestroy()
     {
+        Application.logMessageReceived -= OutputLog;
         _panelsController.onChanged -= OutputPanel;
         _openButton.onClick.RemoveListener(_panelsController.SetOpen);
         _closeButton.onClick.RemoveListener(_panelsController.SetClose);
@@ -33,8 +33,6 @@ public class LogView : MonoBehaviour
     private void Start()
     {
         _panelsController.SetClose();
-
-        Debug.Log("Test Log ???");
     }
 
     private void OutputPanel(PanelModel panel)

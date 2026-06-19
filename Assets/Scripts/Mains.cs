@@ -7,6 +7,8 @@ internal class Mains : MonoBehaviour
     [SerializeField] private ProgressDatabase _progressDatabase;
     [SerializeField] private LoadingPresenter _loadingPresenterPrefab;
     [SerializeField] private SoundPresenter _soundPresenterPrefab;
+    [SerializeField] private GameObject _logPrefab;
+    [SerializeField] private bool _isTesting;
     [SerializeField] private IMain _main;
 
     private const string ProgressFileName = "Progress", SettingsFileName = "Settings";
@@ -19,6 +21,7 @@ internal class Mains : MonoBehaviour
 
     private static LoadingPresenter LoadingPresenter;
     private static SoundPresenter SoundPresenter;
+    private static GameObject _log;
 
     private ProgressData _progressData;
     private ProgressModel _progress = new();
@@ -28,6 +31,8 @@ internal class Mains : MonoBehaviour
     {
         DontDestroyOnLoad(LoadingPresenter ??= Instantiate(_loadingPresenterPrefab));
         DontDestroyOnLoad(SoundPresenter ??= Instantiate(_soundPresenterPrefab));
+        if (_isTesting)
+            DontDestroyOnLoad(_log ??= Instantiate(_logPrefab));
 
         _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile? _progressEncryptionCodeFile.text : "");
         if (!_progressEncryptionCodeFile) Debug.Log("Add EncryptionCodeFile before build");

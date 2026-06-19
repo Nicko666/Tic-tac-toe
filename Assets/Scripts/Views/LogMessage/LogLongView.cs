@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class LogLongView : MonoBehaviour
+internal class LogLongView : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
     

@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mains
   _progressEncryptionCodeFile: {fileID: 4900000, guid: b6ea30122091cb3448c34df362b62983, type: 3}
-  _mains: []
   _progressDatabase: {fileID: 11400000, guid: 93127011855e17244b4b1b93cbc23012, type: 2}
   _loadingPresenterPrefab: {fileID: 6396134178504620899, guid: 7d58ee949b96999488515dcae5d080f5, type: 3}
   _soundPresenterPrefab: {fileID: 2719589946637143933, guid: 3f2d8219f536281439f5d4de603edf6c, type: 3}
+  _logPrefab: {fileID: 2780616718892507736, guid: 03e729f3d478b254a845b268a6f34b73, type: 3}
+  _isTesting: 1
+  _main: {fileID: 0}
