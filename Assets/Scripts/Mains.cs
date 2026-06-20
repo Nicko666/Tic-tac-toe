@@ -34,7 +34,7 @@ internal class Mains : MonoBehaviour
         if (_isTesting)
             DontDestroyOnLoad(_log ??= Instantiate(_logPrefab));
 
-        _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile? _progressEncryptionCodeFile.text : "");
+        _progressDataController = new(Application.persistentDataPath, ProgressFileName, _progressEncryptionCodeFile ? _progressEncryptionCodeFile.text : "");
         if (!_progressEncryptionCodeFile) Debug.Log("Add EncryptionCodeFile before build");
         _settingsDataController = new(Application.persistentDataPath, SettingsFileName);
 
@@ -72,7 +72,7 @@ internal class Mains : MonoBehaviour
             _settingsController.SetData(_settingsData);
         }
     }
-    
+
     private void OutputSettingsDatabase(FrameIntervalModel[] frameIntervals)
     {
         _main.OutputSettingsDatabase(frameIntervals);

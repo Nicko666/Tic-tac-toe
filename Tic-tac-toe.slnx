@@ -3,10 +3,13 @@
   <Project Path="GamePresenter.csproj" />
   <Project Path="GameController.csproj" />
   <Project Path="Components.csproj" />
+  <Project Path="Google.Play.AppUpdate.csproj" />
+  <Project Path="Google.Play.Common.csproj" />
   <Project Path="Models.csproj" />
   <Project Path="MenuPresenter.csproj" />
   <Project Path="MenuController.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Google.Play.Core.csproj" />
   <Project Path="GameModels.csproj" />
   <Project Path="SettingsModels.csproj" />
 </Solution>

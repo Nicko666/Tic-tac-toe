@@ -769,7 +769,7 @@ MonoBehaviour:
   _logScrollRect: {fileID: 3332413344214625192}
   _logPrefab: {fileID: 4537022213422753772}
   _logDatabase:
-    Error: {r: 1, g: 0, b: 0, a: 1}
+    Error: {r: 1, g: 0.36, b: 0.36, a: 1}
     Assert: {r: 0, g: 0.6666665, b: 1, a: 1}
     Warning: {r: 0.6666666, g: 1, b: 0, a: 1}
     Log: {r: 1, g: 1, b: 1, a: 1}
